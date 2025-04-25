@@ -1,6 +1,7 @@
 const generateArticleBtn = document.getElementById("generate-articles");
 const getArticleBtn = document.getElementById("get-articles");
 const container = document.getElementById("articles");
+const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
 
 generateArticleBtn.addEventListener("click", generateArticles);
 getArticleBtn.addEventListener("click", getArticle);
@@ -31,7 +32,7 @@ function generateArticles(e) {
 }
 
 async function post(payload) {
-  const response = await fetch("http://127.0.0.1:3000/v1/articles", {
+  const response = await fetch(`${baseUrl}/v1/articles`, {
     method: "POST",
     body: payload,
     headers: {
@@ -51,7 +52,7 @@ function primaryArticle(data) {
   const primary = document.createElement("div");
 
   const header = document.createElement("h2");
-  header.textContent = "Primary Article";
+  header.textContent = `Primary Article (ID: ${data.id})`;
 
   const title = document.createElement("h4");
   title.textContent = data.title;
@@ -93,9 +94,18 @@ function generatedArticles(data) {
 
 function renderGeneratedArticles(data) {
   const primary = primaryArticle(data);
-  const generated = generatedArticles(data);
 
-  container.replaceChildren(primary, generated);
+  if (data.generated_articles === null) {
+    const message = document.createElement("h4");
+    message.textContent =
+      "No generated articles was created for this Article. Try again with the same primary article contents.";
+    message.style.color = "red";
+    container.replaceChildren(message, primary);
+  } else {
+    const generated = generatedArticles(data);
+
+    container.replaceChildren(primary, generated);
+  }
 }
 
 function renderArticlesFromList(articles_list, main_header_str) {
@@ -128,7 +138,7 @@ function renderArticlesFromList(articles_list, main_header_str) {
 async function getArticle(e) {
   e.preventDefault();
   const id = document.getElementById("article-id").value;
-  const response = await fetch(`http://127.0.0.1:3000/v1/articles/${id}`, {
+  const response = await fetch(`${baseUrl}/v1/articles/${id}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${api_key()}`,
