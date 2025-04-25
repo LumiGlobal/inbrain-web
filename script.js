@@ -1,8 +1,11 @@
-const submit = document.getElementById("submit");
+const generateArticleBtn = document.getElementById("generate-articles");
+const getArticleBtn = document.getElementById("get-articles");
+const container = document.getElementById("articles");
 
-submit.addEventListener("click", sendData);
+generateArticleBtn.addEventListener("click", generateArticles);
+getArticleBtn.addEventListener("click", getArticle);
 
-function sendData(e) {
+function generateArticles(e) {
   e.preventDefault();
   const title = document.getElementById("title").value;
   const description = document.getElementById("description").value;
@@ -24,50 +27,78 @@ function sendData(e) {
   };
 
   const payload = JSON.stringify(article);
-
-  async function postData(payload) {
-    const response = await fetch("http://127.0.0.1:3000/v1/articles", {
-      method: "POST",
-      body: payload,
-      headers: {
-        "Content-Type": "application/json; charset=UTF-8",
-      },
-    });
-    const body = await response.json();
-    console.log(body);
-  }
-
-  postData(payload);
+  post(payload);
 }
 
-async function renderJSON(path) {
-  const response = await fetch(path);
+async function post(payload) {
+  const response = await fetch("http://127.0.0.1:3000/v1/articles", {
+    method: "POST",
+    body: payload,
+    headers: {
+      Authorization: `Bearer ${api_key()}`,
+      "Content-Type": "application/json; charset=UTF-8",
+    },
+  });
   const data = await response.json();
-  const generated_articles = data.generated_articles;
-  console.log(generated_articles);
+  renderGeneratedArticles(data);
+}
 
-  const container = document.createElement("div");
+function api_key() {
+  return document.getElementById("api-key").value;
+}
 
-  const header = document.createElement("h3");
-  header.textContent = `Main Category: ${generated_articles.main_category}`;
-  container.append(header);
+function primaryArticle(data) {
+  const primary = document.createElement("div");
 
-  addArticles(
-    generated_articles.subject_articles,
-    container,
+  const header = document.createElement("h2");
+  header.textContent = "Primary Article";
+
+  const title = document.createElement("h4");
+  title.textContent = data.title;
+
+  const description = document.createElement("p");
+  description.textContent = data.description;
+
+  const content = document.createElement("p");
+  content.textContent = data.content;
+
+  primary.append(header, title, description, content);
+
+  return primary;
+}
+
+function generatedArticles(data) {
+  const generated = document.createElement("div");
+
+  const header = document.createElement("h2");
+  header.textContent = "Generated Articles";
+
+  const main_cat = document.createElement("p");
+  main_cat.textContent = `Main Category: ${data.generated_articles.main_category}`;
+
+  const subject_articles = renderArticlesFromList(
+    data.generated_articles.subject_articles,
     "Subject Articles",
   );
 
-  addArticles(
-    generated_articles.taboola_articles,
-    container,
+  const taboola_articles = renderArticlesFromList(
+    data.generated_articles.taboola_articles,
     "Taboola Articles",
   );
 
-  document.body.appendChild(container);
+  generated.append(header, main_cat, subject_articles, taboola_articles);
+
+  return generated;
 }
 
-function addArticles(articles_list, container, main_header_str) {
+function renderGeneratedArticles(data) {
+  const primary = primaryArticle(data);
+  const generated = generatedArticles(data);
+
+  container.replaceChildren(primary, generated);
+}
+
+function renderArticlesFromList(articles_list, main_header_str) {
   const articles_container = document.createElement("div");
   const main_header = document.createElement("h3");
   main_header.textContent = main_header_str;
@@ -91,7 +122,18 @@ function addArticles(articles_list, container, main_header_str) {
     articles_container.appendChild(article);
   });
 
-  container.appendChild(articles_container);
+  return articles_container;
 }
 
-renderJSON("./pretty.json");
+async function getArticle(e) {
+  e.preventDefault();
+  const id = document.getElementById("article-id").value;
+  const response = await fetch(`http://127.0.0.1:3000/v1/articles/${id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${api_key()}`,
+    },
+  });
+  const data = await response.json();
+  renderGeneratedArticles(data);
+}
