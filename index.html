@@ -8,12 +8,13 @@
 
     <body>
         <h1>Inbrain</h1>
-        <div>
-            <p>Input API key before sending request!</p>
-            <label for="api-key">API Key*: </label>
+        <div id="api-key-div">
+            <label for="api-key">Enter API Key: </label>
             <input type="password" id="api-key" name="api-key" />
+            <input type="submit" value="Save Key" id="save-key" />
+            <p hidden id="api-key-message"></p>
         </div>
-        <div>
+        <div class="gatekeeped" hidden>
             <h3>Generate articles from a primary article</h3>
             <form>
                 <h4>Primary article</h4>
@@ -46,7 +47,7 @@
                 </div>
             </form>
         </div>
-        <div>
+        <div class="gatekeeped" hidden>
             <form>
                 <h3>Fetch previously generated articles</h3>
                 <div>

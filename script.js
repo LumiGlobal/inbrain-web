@@ -1,10 +1,42 @@
 const generateArticleBtn = document.getElementById("generate-articles");
 const getArticleBtn = document.getElementById("get-articles");
+const saveKeyBtn = document.getElementById("save-key");
 const container = document.getElementById("articles");
-const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
+const gatekeeped = [...document.getElementsByClassName("gatekeeped")];
+const message = document.getElementById("api-key-message");
+// const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
+const baseUrl = "http://127.0.0.1:3000";
 
 generateArticleBtn.addEventListener("click", generateArticles);
 getArticleBtn.addEventListener("click", getArticle);
+saveKeyBtn.addEventListener("click", saveKey);
+
+async function saveKey(e) {
+  e.preventDefault();
+  const api_key = document.getElementById("api-key").value;
+
+  const response = await fetch(`${baseUrl}/keys/verify`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${api_key}`,
+    },
+  });
+
+  if (response.status === 204) {
+    sessionStorage.setItem("api_key", api_key);
+    message.hidden = true;
+    gatekeeped.forEach((e) => (e.hidden = false));
+    document.getElementById("api-key-div").hidden = true;
+  } else {
+    message.textContent = "Wrong API Key! Try again.";
+    message.style.color = "red";
+    message.hidden = false;
+  }
+}
+
+function api_key() {
+  return sessionStorage.getItem("api_key");
+}
 
 function generateArticles(e) {
   e.preventDefault();
@@ -42,10 +74,6 @@ async function post(payload) {
   });
   const data = await response.json();
   renderGeneratedArticles(data);
-}
-
-function api_key() {
-  return document.getElementById("api-key").value;
 }
 
 function primaryArticle(data) {
@@ -147,3 +175,16 @@ async function getArticle(e) {
   const data = await response.json();
   renderGeneratedArticles(data);
 }
+
+function apiKeyState() {
+  if (api_key() === null) {
+    gatekeeped.forEach((e) => (e.hidden = true));
+    document.getElementById("api-key-div").hidden = false;
+  } else {
+    message.hidden = true;
+    gatekeeped.forEach((e) => (e.hidden = false));
+    document.getElementById("api-key-div").hidden = true;
+  }
+}
+
+window.onload = apiKeyState;
