@@ -8,16 +8,17 @@
         <script src="script.js" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
     </head>
-    <body>
-        <div class="p-2">
-            <h2 class="ml-10 text-3xl font-bold text-gray-900">Inbrain</h2>
+    <body class="flex align-center justify-center py-6">
+    <div class="w-3/4">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900">Inbrain</h2>
         </div>
-        <div class="flex px-4">
-            <div class="w-1/2">
-                <div id="accordion-flush" data-accordion="collapse" data-active-classes="bg-white text-gray-900" data-inactive-classes="text-gray-900">
+        <div class="grid grid-cols-5 grid-rows-5 gap-4 py-2">
+            <div class="col-span-2">
+                <div id="accordion-flush" data-accordion="collapse" data-active-classes="bg-white text-blue-800" data-inactive-classes="text-gray-900">
                     <h2 id="accordion-flush-heading-1">
-                        <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 border-b border-gray-200 gap-3" data-accordion-target="#accordion-flush-body-1" aria-expanded="true" aria-controls="accordion-flush-body-1">
-                            <span>Generate Articles</span>
+                        <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800" data-accordion-target="#accordion-flush-body-1" aria-expanded="true" aria-controls="accordion-flush-body-1">
+                            <span class="text-xl ">Generate Articles</span>
                             <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
                             </svg>
@@ -25,22 +26,22 @@
                     </h2>
                     <div id="accordion-flush-body-1" class="hidden" aria-labelledby="accordion-flush-heading-1">
                         <div id="create">
-                            <form class="p-4 flex flex-col gap-4">
+                            <form class="flex flex-col gap-4">
                                 <div>
-                                    <label for="title" class="block mb-2 ml-1 text-base font-medium text-gray-900">Title*</label>
+                                    <label for="title" class="block mb-2  text-base font-medium text-gray-900">Title*</label>
                                     <input type="text" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
                                 </div>
                                 <div>
-                                    <label for="description" class="block mb-2 ml-1 text-base font-medium text-gray-900">Description</label>
+                                    <label for="description" class="block mb-2 text-base font-medium text-gray-900">Description</label>
                                     <textarea id="description" rows="6" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 resize-none" placeholder="Lorem ipsum dolor sit amet..."></textarea>
                                 </div>
                                 <div>
-                                    <label for="content" class="block mb-2 ml-1 text-base font-medium text-gray-900">Content*</label>
+                                    <label for="content" class="block mb-2  text-base font-medium text-gray-900">Content*</label>
                                     <textarea id="content" rows="6" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 resize-none" placeholder="Ut enim ad minim veniam..." required></textarea>
                                 </div>
                                 <div>
-                                    <label for="language-code">Language:</label>
-                                    <select name="language-code" id="language-code">
+                                    <label for="language-code" class="block mb-2  text-base font-medium text-gray-900 ">Language*:</label>
+                                    <select id="language-code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                         <option value="en">English</option>
                                         <option value="ms">Malay</option>
                                         <option value="zh">Chinese</option>
@@ -51,14 +52,15 @@
                                             type="submit"
                                             value="Generate Articles"
                                             id="generate-articles"
+                                            class="text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                                     />
                                 </div>
                             </form>
                         </div>
                     </div>
                     <h2 id="accordion-flush-heading-2">
-                        <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-500 border-b border-gray-200  gap-3" data-accordion-target="#accordion-flush-body-2" aria-expanded="false" aria-controls="accordion-flush-body-2">
-                            <span>Fetch Articles by Primary Article ID</span>
+                        <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800" data-accordion-target="#accordion-flush-body-2" aria-expanded="false" aria-controls="accordion-flush-body-2">
+                            <span class="text-xl">Fetch Articles by Primary Article ID</span>
                             <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
                             </svg>
@@ -67,27 +69,22 @@
                     <div id="accordion-flush-body-2" class="hidden" aria-labelledby="accordion-flush-heading-2">
                         <div id="fetch">
                             <form>
-                                <h3>Fetch previously generated articles</h3>
-                                <div>
-                                    <label for="article-id"
-                                    >Enter your primary article id:</label
-                                    >
-                                    <input type="number" name="article-id" id="article-id" />
-                                </div>
-                                <div>
-                                    <input
-                                            type="submit"
-                                            value="Get Articles"
-                                            id="get-articles"
-                                    />
-                                </div>
+                                <label for="article-id" class="block mb-2 text-base font-medium text-gray-900 ">ID</label>
+                                <input type="number" id="article-id" class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="90210" required />
+                                <input
+                                        type="submit"
+                                        value="Get Articles"
+                                        id="get-articles"
+                                        class="text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                />
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="articles">
+            <div id="articles" class="col-span-3">
             </div>
         </div>
+    </div>
     </body>
 </html>
