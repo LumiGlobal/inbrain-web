@@ -1,70 +1,33 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Inbrain</title>
-        <script type="module" src="script.js" defer></script>
-    </head>
-
-    <body>
-        <h1>Inbrain</h1>
-        <div id="api-key-div">
-            <label for="api-key">Enter API Key: </label>
-            <input type="password" id="api-key" name="api-key" />
-            <input type="submit" value="Save Key" id="save-key" />
-            <p hidden id="api-key-message"></p>
+<head>
+    <meta charset="UTF-8" />
+    <title>Inbrain</title>
+    <script src="verify.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="h-screen">
+    <div class="flex min-h-full flex-col justify-center px-6 py-14 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <h2 class="text-center text-3xl font-bold text-gray-900">Inbrain</h2>
         </div>
-        <div class="gatekeeped" hidden>
-            <h3>Generate articles from a primary article</h3>
-            <form>
-                <h4>Primary article</h4>
-                <div>
-                    <label for="title">Title*: </label>
-                    <input type="text" id="title" name="title" required />
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+        <form class="space-y-6">
+            <div>
+                <div class="flex items-center justify-between">
+                    <label for="api-key" class="block text-sm/6 font-medium text-gray-900">API Key</label>
                 </div>
-                <div>
-                    <label for="description">Description:</label>
-                    <textarea id="description" name="description"></textarea>
+                <div class="mt-2">
+                    <input type="password" name="api-key" id="api-key" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                 </div>
-                <div>
-                    <label for="content">Content*:</label>
-                    <textarea id="content" name="content" required></textarea>
-                </div>
-                <div>
-                    <label for="language-code">Language:</label>
-                    <select name="language-code" id="language-code">
-                        <option value="en">English</option>
-                        <option value="ms">Malay</option>
-                        <option value="zh">Chinese</option>
-                    </select>
-                </div>
-                <div>
-                    <input
-                        type="submit"
-                        value="Generate Articles"
-                        id="generate-articles"
-                    />
-                </div>
-            </form>
-        </div>
-        <div class="gatekeeped" hidden>
-            <form>
-                <h3>Fetch previously generated articles</h3>
-                <div>
-                    <label for="article-id"
-                        >Enter your primary article id:</label
-                    >
-                    <input type="number" name="article-id" id="article-id" />
-                </div>
-                <div>
-                    <input
-                        type="submit"
-                        value="Get Articles"
-                        id="get-articles"
-                    />
-                </div>
-            </form>
-        </div>
-        <div id="articles"></div>
-    </body>
-</html>
+            </div>
+            <div>
+                <button id="save-key" type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
+            </div>
+            <div>
+                <p id="message" class="text-base text-red-500 font-bold text-center" hidden>Wrong API Key! Try again.</p>
+            </div>
+        </form>
+    </div>
+</div>
+</body>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Inbrain</title>
+        <script src="script.js" defer></script>
+    </head>
+
+    <body>
+        <h1>Inbrain</h1>
+        <div>
+            <h3>Generate articles from a primary article</h3>
+            <form>
+                <h4>Primary article</h4>
+                <div>
+                    <label for="title">Title*: </label>
+                    <input type="text" id="title" name="title" required />
+                </div>
+                <div>
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description"></textarea>
+                </div>
+                <div>
+                    <label for="content">Content*:</label>
+                    <textarea id="content" name="content" required></textarea>
+                </div>
+                <div>
+                    <label for="language-code">Language:</label>
+                    <select name="language-code" id="language-code">
+                        <option value="en">English</option>
+                        <option value="ms">Malay</option>
+                        <option value="zh">Chinese</option>
+                    </select>
+                </div>
+                <div>
+                    <input
+                        type="submit"
+                        value="Generate Articles"
+                        id="generate-articles"
+                    />
+                </div>
+            </form>
+        </div>
+        <div>
+            <form>
+                <h3>Fetch previously generated articles</h3>
+                <div>
+                    <label for="article-id"
+                        >Enter your primary article id:</label
+                    >
+                    <input type="number" name="article-id" id="article-id" />
+                </div>
+                <div>
+                    <input
+                        type="submit"
+                        value="Get Articles"
+                        id="get-articles"
+                    />
+                </div>
+            </form>
+        </div>
+        <div id="articles"></div>
+    </body>
+</html>
