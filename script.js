@@ -3,11 +3,20 @@ const api_key = sessionStorage.getItem("api_key")
 const generateArticleBtn = document.getElementById("generate-articles");
 const getArticleBtn = document.getElementById("get-articles");
 const loadingBtn = document.getElementById("loading-button")
-// const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
-const baseUrl = "http://127.0.0.1:3000";
+const getByLanguagesBtn = document.getElementById("get-by-language")
+const articlesContainer = document.getElementById("articles-container")
+const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
+// const baseUrl = "http://127.0.0.1:3000";
 
 generateArticleBtn.addEventListener("click", generateArticles);
 getArticleBtn.addEventListener("click", getArticle);
+getByLanguagesBtn.addEventListener("click", getArticlesByLanguage)
+
+function clearAccordions() {
+  [...articlesContainer.children].forEach((container) => {
+    container.replaceChildren()
+  })
+}
 
 function setLoading(isLoading) {
   if (isLoading) {
@@ -52,7 +61,9 @@ async function generateArticles(e) {
     },
   });
   const data = await response.json();
-  new ArticleAccordionComponent("articles", data)
+  clearAccordions()
+  new ArticleAccordionComponent("article-0", data)
+  window.initFlowbite()
   setLoading(false)
 }
 
@@ -65,19 +76,23 @@ async function getArticle(e) {
       Authorization: `Bearer ${api_key}`,
     },
   });
+  clearAccordions()
   const data = await response.json();
   new ArticleAccordionComponent("article-0", data)
   window.initFlowbite()
 }
 
-async function getArticlesByLanguage() {
-  const response = await fetch(`${baseUrl}/v1/articles/languages/en`, {
+async function getArticlesByLanguage(e) {
+  e.preventDefault()
+  const code = document.getElementById("by-language").value
+  const response = await fetch(`${baseUrl}/v1/articles/languages/${code}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${api_key}`,
     },
   });
   const data = await response.json();
+  clearAccordions()
   data.forEach((article, i) => {
     new ArticleAccordionComponent(`article-${i}`, article)
   })
@@ -87,8 +102,6 @@ async function getArticlesByLanguage() {
 window.onload = () => {
   if (api_key === null) {
     location.href = "index.html"
-  } else {
-    getArticlesByLanguage()
   }
 };
 
