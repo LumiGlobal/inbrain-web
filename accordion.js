@@ -3,12 +3,13 @@ class ArticleAccordionComponent {
         this.container = document.getElementById(containerId);
         this.articleData = articleData;
         this.idCounter = 0;
+        this.instanceId = Math.random().toString(36).substring(2, 8);
         this.render();
     }
 
     generateUniqueId(prefix) {
         this.idCounter++;
-        return `${prefix}-${this.idCounter}`;
+        return `${prefix}-${this.instanceId}-${this.idCounter}`;
     }
 
     createAccordionButton(title, targetId, expanded = false, level = 0) {
@@ -227,32 +228,6 @@ class ArticleAccordionComponent {
         return accordionItem;
     }
 
-    addAccordionListeners() {
-        const accordionButtons = document.querySelectorAll('[data-accordion-target]');
-
-        accordionButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const targetId = this.getAttribute('data-accordion-target');
-                const targetPanel = document.querySelector(targetId);
-
-                if (targetPanel) {
-                    targetPanel.classList.toggle('hidden');
-                    const isExpanded = !targetPanel.classList.contains('hidden');
-                    this.setAttribute('aria-expanded', isExpanded);
-
-                    const icon = this.querySelector('[data-accordion-icon]');
-                    if (icon) {
-                        if (isExpanded) {
-                            icon.classList.remove('rotate-180');
-                        } else {
-                            icon.classList.add('rotate-180');
-                        }
-                    }
-                }
-            });
-        });
-    }
-
     render() {
         // Clear the container
         this.container.innerHTML = '';
@@ -327,7 +302,47 @@ class ArticleAccordionComponent {
 
         mainAccordion.appendChild(mainBody);
         this.container.appendChild(mainAccordion);
-        this.addAccordionListeners();
+        this.container.querySelectorAll('[data-accordion-target]').forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+
+                const parentAccordion = button.closest('[data-accordion]');
+                if (!parentAccordion) return;
+
+                const targetId = button.getAttribute('data-accordion-target').substring(1);
+                const target = parentAccordion.querySelector(`#${targetId}`); // scoped inside!
+
+                const expanded = button.getAttribute('aria-expanded') === 'true';
+
+                // Collapse all siblings inside this accordion
+                parentAccordion.querySelectorAll('[data-accordion-target]').forEach(otherButton => {
+                    if (otherButton !== button) {
+                        const otherTargetId = otherButton.getAttribute('data-accordion-target').substring(1);
+                        const otherTarget = parentAccordion.querySelector(`#${otherTargetId}`);
+                        if (otherTarget) {
+                            otherButton.setAttribute('aria-expanded', 'false');
+                            otherTarget.classList.add('hidden');
+
+                            const otherSvg = otherButton.querySelector('svg');
+                            if (otherSvg) {
+                                otherSvg.classList.add('rotate-180');
+                            }
+                        }
+                    }
+                });
+
+                // Toggle clicked one
+                if (target) {
+                    button.setAttribute('aria-expanded', (!expanded).toString());
+                    target.classList.toggle('hidden', expanded);
+
+                    const svg = button.querySelector('svg');
+                    if (svg) {
+                        svg.classList.toggle('rotate-180', expanded);
+                    }
+                }
+            });
+        });
     }
 }
 export default ArticleAccordionComponent

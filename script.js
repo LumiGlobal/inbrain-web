@@ -66,12 +66,29 @@ async function getArticle(e) {
     },
   });
   const data = await response.json();
-  new ArticleAccordionComponent("articles", data)
+  new ArticleAccordionComponent("article-0", data)
+  window.initFlowbite()
+}
+
+async function getArticlesByLanguage() {
+  const response = await fetch(`${baseUrl}/v1/articles/languages/en`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${api_key}`,
+    },
+  });
+  const data = await response.json();
+  data.forEach((article, i) => {
+    new ArticleAccordionComponent(`article-${i}`, article)
+  })
+  window.initFlowbite()
 }
 
 window.onload = () => {
   if (api_key === null) {
     location.href = "index.html"
+  } else {
+    getArticlesByLanguage()
   }
 };
 
