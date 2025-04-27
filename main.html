@@ -5,8 +5,8 @@
         <title>Inbrain</title>
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
         <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
-        <script src="script.js" defer></script>
-        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+        <script type="module" src="script.js" defer></script>
     </head>
     <body class="flex align-center justify-center py-6">
     <div class="w-3/4">
@@ -70,7 +70,7 @@
                         <div id="fetch">
                             <form>
                                 <label for="article-id" class="block mb-2 text-base font-medium text-gray-900 ">ID</label>
-                                <input type="number" id="article-id" class="mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="90210" required />
+                                <input type="number" id="article-id" class="mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="17" required />
                                 <input
                                         type="submit"
                                         value="Get Articles"
@@ -82,132 +82,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-span-3">
-                    <!-- Main Accordion -->
-                    <div id="main-accordion-collapse" data-accordion="collapse" data-active-classes="bg-white text-blue-800" data-inactive-classes="text-gray-900">
-                        <!-- Article ID -->
-                        <h2 id="main-accordion-heading-1">
-                            <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800"
-                                    data-accordion-target="#main-accordion-body-1"
-                                    aria-expanded="true"
-                                    aria-controls="main-accordion-body-1">
-                                <span class="text-xl">Article #12345</span>
-                                <svg data-accordion-icon class="w-3 h-3 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
-                                </svg>
-                            </button>
-                        </h2>
-                        <div id="main-accordion-body-1" class="block" aria-labelledby="main-accordion-heading-1">
-                                <!-- Primary Article -->
-                                <div data-accordion="collapse" data-active-classes="bg-white text-blue-800" data-inactive-classes="text-gray-900">
-                                    <h3 id="primary-article-heading">
-                                        <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800"
-                                                data-accordion-target="#primary-article-body"
-                                                aria-expanded="false"
-                                                aria-controls="primary-article-body">
-                                            <span class="ml-2">Primary Article</span>
-                                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
-                                            </svg>
-                                        </button>
-                                    </h3>
-                                    <div id="primary-article-body" class="hidden" aria-labelledby="primary-article-heading">
-                                        <div class="ml-4">
-                                            <p class="mb-2 text-gray-700">Primary article content goes here.</p>
-                                            <p class="text-gray-700">This is the main article content.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Generated Articles -->
-                                <div data-accordion="collapse" data-active-classes="bg-white text-blue-800" data-inactive-classes="text-gray-900">
-                                    <h3 id="generated-articles-heading">
-                                        <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800"
-                                                data-accordion-target="#generated-articles-body"
-                                                aria-expanded="false"
-                                                aria-controls="generated-articles-body">
-                                            <span class="ml-2">Generated Articles</span>
-                                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
-                                            </svg>
-                                        </button>
-                                    </h3>
-                                    <div id="generated-articles-body" class="hidden" aria-labelledby="generated-articles-heading">
-                                            <!-- Subject Articles (Nested) -->
-                                            <div data-accordion="collapse" data-active-classes="bg-white text-blue-800" data-inactive-classes="text-gray-900">
-                                                <h4 id="subject-articles-heading">
-                                                    <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800"
-                                                            data-accordion-target="#subject-articles-body"
-                                                            aria-expanded="false"
-                                                            aria-controls="subject-articles-body">
-                                                        <span class="ml-4">Subject Articles</span>
-                                                        <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
-                                                        </svg>
-                                                    </button>
-                                                </h4>
-                                                <div id="subject-articles-body" class="hidden" aria-labelledby="subject-articles-heading">
-                                                        <!-- Subject Title 1 -->
-                                                        <div data-accordion="collapse" data-active-classes="bg-white text-blue-800" data-inactive-classes="text-gray-900">
-                                                            <h5 id="subject-title1-heading">
-                                                                <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800"
-                                                                        data-accordion-target="#subject-title1-body"
-                                                                        aria-expanded="false"
-                                                                        aria-controls="subject-title1-body">
-                                                                    <span class="ml-6">Title 1</span>
-                                                                    <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
-                                                                    </svg>
-                                                                </button>
-                                                            </h5>
-                                                            <div id="subject-title1-body" class="hidden" aria-labelledby="subject-title1-heading">
-                                                                <div class="ml-8">
-                                                                    <p class="text-gray-700">Content for Subject Article Title 1</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Taboola Articles (Nested) -->
-                                            <div data-accordion="collapse" data-active-classes="bg-white text-blue-800" data-inactive-classes="text-gray-900">
-                                                <h4 id="taboola-articles-heading">
-                                                    <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800"
-                                                            data-accordion-target="#taboola-articles-body"
-                                                            aria-expanded="false"
-                                                            aria-controls="taboola-articles-body">
-                                                        <span class="ml-4">Taboola Articles</span>
-                                                        <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
-                                                        </svg>
-                                                    </button>
-                                                </h4>
-                                                <div id="taboola-articles-body" class="hidden" aria-labelledby="taboola-articles-heading">
-                                                        <!-- Taboola Title 1 -->
-                                                        <div data-accordion="collapse" data-active-classes="bg-white text-blue-800" data-inactive-classes="text-gray-900">
-                                                            <h5 id="taboola-title1-heading">
-                                                                <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800"
-                                                                        data-accordion-target="#taboola-title1-body"
-                                                                        aria-expanded="false"
-                                                                        aria-controls="taboola-title1-body">
-                                                                    <span class="ml-6">Title 1</span>
-                                                                    <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
-                                                                    </svg>
-                                                                </button>
-                                                            </h5>
-                                                            <div id="taboola-title1-body" class="hidden" aria-labelledby="taboola-title1-heading">
-                                                                <div class="ml-8">
-                                                                    <p class="text-gray-700">Content for Taboola Article Title 1</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                </div>
-                                            </div>
-                                    </div>
-                                </div>
-                        </div>
-                    </div>
+            <div class="col-span-3" id="articles">
             </div>
         </div>
     </div>
