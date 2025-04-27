@@ -124,7 +124,7 @@ class ArticleAccordionComponent {
                 // Add subheader if exists
                 if (para.subheader) {
                     const subheader = document.createElement('h6');
-                    subheader.className = 'font-semibold mt-3 mb-1 text-gray-800';
+                    subheader.className = 'mt-3 mb-1 text-gray-800';
                     subheader.textContent = para.subheader;
                     contentDiv.appendChild(subheader);
                 }
