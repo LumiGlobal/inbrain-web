@@ -121,8 +121,13 @@ class ArticleAccordionComponent {
 
         // Process paragraphs
         if (article.paragraphs && article.paragraphs.length) {
-            article.paragraphs.forEach(para => {
+            article.paragraphs.forEach((para, i) => {
                 if (!para.subheader || !para.content) {
+                    // return
+                    const error = document.createElement("p")
+                    error.textContent = `Subheader ${i + 1} or Content ${i + 1} is missing. Regenerate articles with ID: ${this.articleData.id}`
+                    error.className = "text-red-500"
+                    contentDiv.appendChild(error)
                     return
                 }
 
@@ -299,9 +304,10 @@ class ArticleAccordionComponent {
             generatedSection.appendChild(generatedBody);
             mainBody.appendChild(generatedSection);
         } else {
-            const error = document.getElementById("error")
+            const error = document.createElement("p")
             error.innerHTML = `Article ${this.articleData.id} does not have generated articles. Regenerate article with ID: ${this.articleData.id}.`
-            error.hidden = false
+            error.className = "ml-2 text-red-500"
+            mainBody.appendChild(error)
         }
 
         mainAccordion.appendChild(mainBody);
