@@ -250,7 +250,7 @@ class ArticleAccordionComponent {
         mainHeading.id = mainHeadingId;
 
         const mainButton = this.createAccordionButton(`${this.articleData.id}: ${this.articleData.title}`, mainBodyId, false);
-        mainButton.querySelector('span').className = 'text-base';
+        mainButton.querySelector('span').className = 'text-base truncate';
 
         mainHeading.appendChild(mainButton);
         mainAccordion.appendChild(mainHeading);
