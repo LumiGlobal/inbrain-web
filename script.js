@@ -5,12 +5,17 @@ const getArticleBtn = document.getElementById("get-articles");
 const loadingBtn = document.getElementById("loading-button")
 const getByLanguagesBtn = document.getElementById("get-by-language")
 const articlesContainer = document.getElementById("articles-container")
-const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
-// const baseUrl = "http://127.0.0.1:3000";
+const articlesHeader = document.getElementById("articles-header")
+// const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
+const baseUrl = "http://127.0.0.1:3000";
 
 generateArticleBtn.addEventListener("click", generateArticles);
 getArticleBtn.addEventListener("click", getArticle);
-getByLanguagesBtn.addEventListener("click", getArticlesByLanguage)
+getByLanguagesBtn.addEventListener("click", (e) => {
+  e.preventDefault()
+  const code = document.getElementById("by-language").value
+  getArticlesByLanguage(code)
+})
 
 function clearAccordions() {
   [...articlesContainer.children].forEach((container) => {
@@ -84,9 +89,24 @@ async function getArticle(e) {
   window.initFlowbite()
 }
 
-async function getArticlesByLanguage(e) {
-  e.preventDefault()
-  const code = document.getElementById("by-language").value
+function setArticleHeader(code) {
+  let language = "";
+  switch (code) {
+    case "en":
+      language = "English";
+      break;
+    case "ms":
+      language = "Malay";
+      break;
+    case "zh":
+      language = "Chinese"
+      break
+  }
+  articlesHeader.textContent = `5 Most Recent ${language} Articles`
+  articlesHeader.hidden = false;
+}
+
+async function getArticlesByLanguage(code) {
   const response = await fetch(`${baseUrl}/v1/articles/languages/${code}`, {
     method: "GET",
     headers: {
@@ -96,6 +116,7 @@ async function getArticlesByLanguage(e) {
   });
   const data = await response.json();
   clearAccordions()
+  setArticleHeader(code)
   data.forEach((article, i) => {
     new ArticleAccordionComponent(`article-${i}`, article)
   })
@@ -105,6 +126,8 @@ async function getArticlesByLanguage(e) {
 window.onload = () => {
   if (api_key === null) {
     location.href = "index.html"
+  } else {
+    getArticlesByLanguage("en")
   }
 };
 
