@@ -12,6 +12,7 @@ async function saveKey(e) {
         headers: {
             Authorization: `Bearer ${api_key}`,
         },
+        credentials: "include"
     });
 
     if (response.status === 204) {

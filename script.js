@@ -59,6 +59,7 @@ async function generateArticles(e) {
       Authorization: `Bearer ${api_key}`,
       "Content-Type": "application/json; charset=UTF-8",
     },
+    credentials: "include"
   });
   const data = await response.json();
   clearAccordions()
@@ -75,6 +76,7 @@ async function getArticle(e) {
     headers: {
       Authorization: `Bearer ${api_key}`,
     },
+    credentials: "include"
   });
   clearAccordions()
   const data = await response.json();
@@ -90,6 +92,7 @@ async function getArticlesByLanguage(e) {
     headers: {
       Authorization: `Bearer ${api_key}`,
     },
+    credentials: "include"
   });
   const data = await response.json();
   clearAccordions()
