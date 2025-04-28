@@ -122,21 +122,19 @@ class ArticleAccordionComponent {
         // Process paragraphs
         if (article.paragraphs && article.paragraphs.length) {
             article.paragraphs.forEach(para => {
-                // Add subheader if exists
-                if (para.subheader) {
-                    const subheader = document.createElement('h6');
-                    subheader.className = 'mt-3 mb-1 text-gray-800';
-                    subheader.textContent = para.subheader;
-                    contentDiv.appendChild(subheader);
+                if (!para.subheader || !para.content) {
+                    return
                 }
 
-                // Add content
-                if (para.content) {
-                    const content = document.createElement('p');
-                    content.className = 'text-gray-700 mb-2';
-                    content.textContent = para.content;
-                    contentDiv.appendChild(content);
-                }
+                const subheader = document.createElement('h6');
+                subheader.className = 'mt-3 mb-1 text-gray-800';
+                subheader.textContent = para.subheader;
+                contentDiv.appendChild(subheader);
+
+                const content = document.createElement('p');
+                content.className = 'text-gray-700 mb-2';
+                content.textContent = para.content;
+                contentDiv.appendChild(content);
 
                 // Add source (small and light gray)
                 if (para.source) {
@@ -246,8 +244,8 @@ class ArticleAccordionComponent {
         const mainHeading = document.createElement('h2');
         mainHeading.id = mainHeadingId;
 
-        const mainButton = this.createAccordionButton(`Article #${this.articleData.id}`, mainBodyId, false);
-        mainButton.querySelector('span').className = 'text-xl';
+        const mainButton = this.createAccordionButton(`${this.articleData.id}: ${this.articleData.title}`, mainBodyId, false);
+        mainButton.querySelector('span').className = 'text-base';
 
         mainHeading.appendChild(mainButton);
         mainAccordion.appendChild(mainHeading);
