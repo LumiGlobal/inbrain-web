@@ -257,7 +257,7 @@ class ArticleAccordionComponent {
         mainBody.setAttribute('aria-labelledby', mainHeadingId);
 
         // Add category info if exists
-        if (this.articleData.generated_articles.main_category) {
+        if (this.articleData.generated_articles && this.articleData.generated_articles.main_category) {
             const categoryDiv = document.createElement('div');
             categoryDiv.className = 'mb-3 text-sm font-medium text-gray-600';
             categoryDiv.textContent = `Category: ${this.articleData.generated_articles.main_category}`;
@@ -267,36 +267,42 @@ class ArticleAccordionComponent {
         // Add primary article
         mainBody.appendChild(this.renderPrimaryArticle());
 
-        // Create generated articles section
-        const generatedHeadingId = this.generateUniqueId('generated-heading');
-        const generatedBodyId = this.generateUniqueId('generated-body');
+        if (this.articleData.generated_articles) {
+            // Create generated articles section
+            const generatedHeadingId = this.generateUniqueId('generated-heading');
+            const generatedBodyId = this.generateUniqueId('generated-body');
 
-        const generatedSection = document.createElement('div');
-        generatedSection.setAttribute('data-accordion', 'collapse');
-        generatedSection.setAttribute('data-active-classes', 'bg-white text-blue-800');
-        generatedSection.setAttribute('data-inactive-classes', 'text-gray-900');
+            const generatedSection = document.createElement('div');
+            generatedSection.setAttribute('data-accordion', 'collapse');
+            generatedSection.setAttribute('data-active-classes', 'bg-white text-blue-800');
+            generatedSection.setAttribute('data-inactive-classes', 'text-gray-900');
 
-        const generatedHeading = document.createElement('h3');
-        generatedHeading.id = generatedHeadingId;
+            const generatedHeading = document.createElement('h3');
+            generatedHeading.id = generatedHeadingId;
 
-        const generatedButton = this.createAccordionButton('Generated Articles', generatedBodyId, false, 1);
-        generatedHeading.appendChild(generatedButton);
-        generatedSection.appendChild(generatedHeading);
+            const generatedButton = this.createAccordionButton('Generated Articles', generatedBodyId, false, 1);
+            generatedHeading.appendChild(generatedButton);
+            generatedSection.appendChild(generatedHeading);
 
-        const generatedBody = document.createElement('div');
-        generatedBody.id = generatedBodyId;
-        generatedBody.className = 'hidden';
-        generatedBody.setAttribute('aria-labelledby', generatedHeadingId);
+            const generatedBody = document.createElement('div');
+            generatedBody.id = generatedBodyId;
+            generatedBody.className = 'hidden';
+            generatedBody.setAttribute('aria-labelledby', generatedHeadingId);
 
 
-        // Add subject articles section
-        generatedBody.appendChild(this.renderSubjectArticles());
+            // Add subject articles section
+            generatedBody.appendChild(this.renderSubjectArticles());
 
-        // Add taboola articles section
-        generatedBody.appendChild(this.renderTaboolaArticles());
+            // Add taboola articles section
+            generatedBody.appendChild(this.renderTaboolaArticles());
 
-        generatedSection.appendChild(generatedBody);
-        mainBody.appendChild(generatedSection);
+            generatedSection.appendChild(generatedBody);
+            mainBody.appendChild(generatedSection);
+        } else {
+            const error = document.getElementById("error")
+            error.innerHTML = `Article ${this.articleData.id} does not have generated articles. Regenerate article with ID: ${this.articleData.id}.`
+            error.hidden = false
+        }
 
         mainAccordion.appendChild(mainBody);
         this.container.appendChild(mainAccordion);

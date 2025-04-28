@@ -6,6 +6,7 @@ const loadingBtn = document.getElementById("loading-button")
 const getByLanguagesBtn = document.getElementById("get-by-language")
 const articlesContainer = document.getElementById("articles-container")
 const articlesHeader = document.getElementById("articles-header")
+const errorHeader = document.getElementById("error")
 // const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
 const baseUrl = "http://127.0.0.1:3000";
 
@@ -84,9 +85,21 @@ async function getArticle(e) {
     credentials: "include"
   });
   clearAccordions()
+
+  if (response.status === 404) {
+    renderError(`404: Article ${id} not found`)
+    return
+  }
+
   const data = await response.json();
+  console.log(data)
   new ArticleAccordionComponent("article-0", data)
   window.initFlowbite()
+}
+
+function renderError(string) {
+  errorHeader.textContent = string
+  articlesHeader.hidden = false;
 }
 
 function setArticleHeader(code) {
