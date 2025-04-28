@@ -62,6 +62,7 @@ async function generateArticles(e) {
     credentials: "include"
   });
   const data = await response.json();
+  console.log(data)
   clearAccordions()
   new ArticleAccordionComponent("article-0", data)
   window.initFlowbite()
@@ -80,6 +81,7 @@ async function getArticle(e) {
   });
   clearAccordions()
   const data = await response.json();
+  console.log(data)
   new ArticleAccordionComponent("article-0", data)
   window.initFlowbite()
 }
@@ -96,6 +98,7 @@ async function getArticlesByLanguage(e) {
   });
   const data = await response.json();
   clearAccordions()
+  console.log(data)
   data.forEach((article, i) => {
     new ArticleAccordionComponent(`article-${i}`, article)
   })
