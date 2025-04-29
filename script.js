@@ -9,6 +9,7 @@ const getByLanguagesBtn = document.getElementById("get-by-language")
 const articlesContainer = document.getElementById("articles-container")
 const articlesHeader = document.getElementById("articles-header")
 const errorHeader = document.getElementById("error")
+const index = document.getElementById("index")
 // const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
 const baseUrl = "http://127.0.0.1:3000";
 
@@ -22,7 +23,25 @@ getByLanguagesBtn.addEventListener("click", (e) => {
   getArticlesByLanguage(code, language)
 })
 regenerateBtn.addEventListener("click", regenerateArticles)
+index.addEventListener("click", allArticles)
 
+
+async function allArticles () {
+  const response = await fetch(`${baseUrl}/v1/articles/`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${api_key}`,
+    },
+    credentials: "include"
+  });
+  const data = await response.json()
+  clearAccordions()
+  setArticleHeader(`10 Most Recent Articles`)
+  data.forEach((article, i) => {
+    new ArticleAccordionComponent(`article-${i}`, article)
+  })
+  window.initFlowbite()
+}
 function clearAccordions() {
   [...articlesContainer.children].forEach((container) => {
     container.replaceChildren()
