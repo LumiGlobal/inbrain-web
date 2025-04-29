@@ -5,7 +5,6 @@ const getArticleBtn = document.getElementById("get-articles");
 const regenerateBtn = document.getElementById("regen-article")
 const generateLoadingBtn = document.getElementById("loading-button")
 const regenerateLoadingBtn = document.getElementById("regen-loading")
-const getByLanguagesBtn = document.getElementById("get-by-language")
 const articlesContainer = document.getElementById("articles-container")
 const articlesHeader = document.getElementById("articles-header")
 const errorHeader = document.getElementById("error")
@@ -15,19 +14,19 @@ const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
 
 generateArticleBtn.addEventListener("click", generateArticles);
 getArticleBtn.addEventListener("click", getArticle);
-getByLanguagesBtn.addEventListener("click", (e) => {
-  e.preventDefault()
-  const select = document.getElementById("by-language")
-  const code = select.value
-  const language = select.options[select.selectedIndex].textContent
-  getArticlesByLanguage(code, language)
-})
 regenerateBtn.addEventListener("click", regenerateArticles)
-index.addEventListener("click", allArticles)
+index.addEventListener("click", (e) => {
+  e.preventDefault()
+  allArticles()
+})
 
 
 async function allArticles () {
-  const response = await fetch(`${baseUrl}/v1/articles/`, {
+  const limit = document.getElementById("limit").value
+  const langInput = document.getElementById("language")
+  const languageCode = langInput.value
+  const params = new URLSearchParams({ limit: limit, language_code: languageCode }).toString()
+  const response = await fetch(`${baseUrl}/v1/articles/?${params}` , {
     method: "GET",
     headers: {
       Authorization: `Bearer ${api_key}`,
@@ -36,15 +35,18 @@ async function allArticles () {
   });
   const data = await response.json()
   clearAccordions()
-  setArticleHeader(`10 Most Recent Articles`)
+  const language = langInput.options[langInput.selectedIndex].textContent
+  setArticleHeader(`${limit} Most Recent Articles in ${language} Language`)
   data.forEach((article, i) => {
-    new ArticleAccordionComponent(`article-${i}`, article)
+    createAccordion(i, article)
   })
   window.initFlowbite()
 }
 function clearAccordions() {
+  errorHeader.replaceChildren();
+  articlesHeader.replaceChildren();
   [...articlesContainer.children].forEach((container) => {
-    container.replaceChildren()
+    container.remove()
   })
 }
 
@@ -72,7 +74,7 @@ async function regenerateArticles(e) {
   })
   const data = await response.json()
   clearAccordions()
-  new ArticleAccordionComponent("article-0", data)
+  createAccordion(0, data)
   setArticleHeader(`Article ${data.id} Regenerated`)
   window.initFlowbite()
   setLoading(regenerateBtn, regenerateLoadingBtn, false)
@@ -114,7 +116,7 @@ async function generateArticles(e) {
   const data = await response.json();
   console.log(data)
   clearAccordions()
-  new ArticleAccordionComponent("article-0", data)
+  createAccordion(0, data)
   setArticleHeader(`Article ${data.id} Generated`)
   window.initFlowbite()
   setLoading(generateArticleBtn, generateLoadingBtn, false)
@@ -136,11 +138,22 @@ async function getArticle(e) {
     renderError(`404: Article ${id} not found`)
     return
   }
-
   const data = await response.json();
-  console.log(data)
-  new ArticleAccordionComponent("article-0", data)
+  createAccordion(0, data)
+  setArticleHeader(`Article ${data.id}`)
   window.initFlowbite()
+}
+
+function createAccordion(i, data) {
+  const containerId = `article-${i}`
+  createArticleContainer(containerId)
+  new ArticleAccordionComponent(containerId, data)
+}
+
+function createArticleContainer(id) {
+  const div = document.createElement("div")
+  div.id = id
+  articlesContainer.appendChild(div)
 }
 
 function renderError(string) {
@@ -151,23 +164,6 @@ function renderError(string) {
 function setArticleHeader(string) {
   articlesHeader.textContent = string
   articlesHeader.hidden = false;
-}
-
-async function getArticlesByLanguage(code, language) {
-  const response = await fetch(`${baseUrl}/v1/articles/languages/${code}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${api_key}`,
-    },
-    credentials: "include"
-  });
-  const data = await response.json();
-  clearAccordions()
-  setArticleHeader(`5 Most Recent ${language} Articles`)
-  data.forEach((article, i) => {
-    new ArticleAccordionComponent(`article-${i}`, article)
-  })
-  window.initFlowbite()
 }
 
 window.onload = () => {
