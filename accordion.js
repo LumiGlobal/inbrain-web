@@ -121,22 +121,25 @@ class ArticleAccordionComponent {
 
         // Process paragraphs
         if (article.paragraphs && article.paragraphs.length) {
-            article.paragraphs.forEach(para => {
-                // Add subheader if exists
-                if (para.subheader) {
-                    const subheader = document.createElement('h6');
-                    subheader.className = 'mt-3 mb-1 text-gray-800';
-                    subheader.textContent = para.subheader;
-                    contentDiv.appendChild(subheader);
+            article.paragraphs.forEach((para, i) => {
+                if (!para.subheader || !para.content) {
+                    // return
+                    const error = document.createElement("p")
+                    error.textContent = `Subheader ${i + 1} or Content ${i + 1} is missing. Regenerate articles with ID: ${this.articleData.id}`
+                    error.className = "text-red-500"
+                    contentDiv.appendChild(error)
+                    return
                 }
 
-                // Add content
-                if (para.content) {
-                    const content = document.createElement('p');
-                    content.className = 'text-gray-700 mb-2';
-                    content.textContent = para.content;
-                    contentDiv.appendChild(content);
-                }
+                const subheader = document.createElement('h6');
+                subheader.className = 'mt-3 mb-1 text-gray-800';
+                subheader.textContent = para.subheader;
+                contentDiv.appendChild(subheader);
+
+                const content = document.createElement('p');
+                content.className = 'text-gray-700 mb-2';
+                content.textContent = para.content;
+                contentDiv.appendChild(content);
 
                 // Add source (small and light gray)
                 if (para.source) {
@@ -246,8 +249,8 @@ class ArticleAccordionComponent {
         const mainHeading = document.createElement('h2');
         mainHeading.id = mainHeadingId;
 
-        const mainButton = this.createAccordionButton(`Article #${this.articleData.id}`, mainBodyId, false);
-        mainButton.querySelector('span').className = 'text-xl';
+        const mainButton = this.createAccordionButton(`${this.articleData.id}: ${this.articleData.title}`, mainBodyId, false);
+        mainButton.querySelector('span').className = 'text-base truncate';
 
         mainHeading.appendChild(mainButton);
         mainAccordion.appendChild(mainHeading);
@@ -259,7 +262,7 @@ class ArticleAccordionComponent {
         mainBody.setAttribute('aria-labelledby', mainHeadingId);
 
         // Add category info if exists
-        if (this.articleData.generated_articles.main_category) {
+        if (this.articleData.generated_articles && this.articleData.generated_articles.main_category) {
             const categoryDiv = document.createElement('div');
             categoryDiv.className = 'mb-3 text-sm font-medium text-gray-600';
             categoryDiv.textContent = `Category: ${this.articleData.generated_articles.main_category}`;
@@ -269,36 +272,43 @@ class ArticleAccordionComponent {
         // Add primary article
         mainBody.appendChild(this.renderPrimaryArticle());
 
-        // Create generated articles section
-        const generatedHeadingId = this.generateUniqueId('generated-heading');
-        const generatedBodyId = this.generateUniqueId('generated-body');
+        if (this.articleData.generated_articles) {
+            // Create generated articles section
+            const generatedHeadingId = this.generateUniqueId('generated-heading');
+            const generatedBodyId = this.generateUniqueId('generated-body');
 
-        const generatedSection = document.createElement('div');
-        generatedSection.setAttribute('data-accordion', 'collapse');
-        generatedSection.setAttribute('data-active-classes', 'bg-white text-blue-800');
-        generatedSection.setAttribute('data-inactive-classes', 'text-gray-900');
+            const generatedSection = document.createElement('div');
+            generatedSection.setAttribute('data-accordion', 'collapse');
+            generatedSection.setAttribute('data-active-classes', 'bg-white text-blue-800');
+            generatedSection.setAttribute('data-inactive-classes', 'text-gray-900');
 
-        const generatedHeading = document.createElement('h3');
-        generatedHeading.id = generatedHeadingId;
+            const generatedHeading = document.createElement('h3');
+            generatedHeading.id = generatedHeadingId;
 
-        const generatedButton = this.createAccordionButton('Generated Articles', generatedBodyId, false, 1);
-        generatedHeading.appendChild(generatedButton);
-        generatedSection.appendChild(generatedHeading);
+            const generatedButton = this.createAccordionButton('Generated Articles', generatedBodyId, false, 1);
+            generatedHeading.appendChild(generatedButton);
+            generatedSection.appendChild(generatedHeading);
 
-        const generatedBody = document.createElement('div');
-        generatedBody.id = generatedBodyId;
-        generatedBody.className = 'hidden';
-        generatedBody.setAttribute('aria-labelledby', generatedHeadingId);
+            const generatedBody = document.createElement('div');
+            generatedBody.id = generatedBodyId;
+            generatedBody.className = 'hidden';
+            generatedBody.setAttribute('aria-labelledby', generatedHeadingId);
 
 
-        // Add subject articles section
-        generatedBody.appendChild(this.renderSubjectArticles());
+            // Add subject articles section
+            generatedBody.appendChild(this.renderSubjectArticles());
 
-        // Add taboola articles section
-        generatedBody.appendChild(this.renderTaboolaArticles());
+            // Add taboola articles section
+            generatedBody.appendChild(this.renderTaboolaArticles());
 
-        generatedSection.appendChild(generatedBody);
-        mainBody.appendChild(generatedSection);
+            generatedSection.appendChild(generatedBody);
+            mainBody.appendChild(generatedSection);
+        } else {
+            const error = document.createElement("p")
+            error.innerHTML = `Article ${this.articleData.id} does not have generated articles. Regenerate article with ID: ${this.articleData.id}.`
+            error.className = "ml-2 text-red-500"
+            mainBody.appendChild(error)
+        }
 
         mainAccordion.appendChild(mainBody);
         this.container.appendChild(mainAccordion);
