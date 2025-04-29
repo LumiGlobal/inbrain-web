@@ -174,7 +174,7 @@ window.onload = () => {
   if (api_key === null) {
     location.href = "index.html"
   } else {
-    getArticlesByLanguage("en", "English")
+    allArticles()
   }
 };
 
