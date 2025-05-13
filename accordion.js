@@ -15,7 +15,7 @@ class ArticleAccordionComponent {
     createAccordionButton(title, targetId, expanded = false, level = 0) {
         const button = document.createElement('button');
         button.type = 'button';
-        button.className = 'flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800';
+        button.className = 'flex items-center justify-between w-full py-2 rtl:text-right text-gray-900 gap-3 hover:text-blue-800';
         button.setAttribute('data-accordion-target', `#${targetId}`);
         button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
         button.setAttribute('aria-controls', targetId);
@@ -101,7 +101,7 @@ class ArticleAccordionComponent {
 
         const accordionItem = document.createElement('div');
         accordionItem.setAttribute('data-accordion', 'collapse');
-        accordionItem.setAttribute('data-active-classes', 'bg-white text-blue-800');
+        accordionItem.setAttribute('data-active-classes', 'bg-white font-bold underline');
         accordionItem.setAttribute('data-inactive-classes', 'text-gray-900');
 
         const heading = document.createElement('h5');
@@ -117,7 +117,7 @@ class ArticleAccordionComponent {
         body.setAttribute('aria-labelledby', headingId);
 
         const contentDiv = document.createElement('div');
-        contentDiv.className = 'ml-6 p-2';
+        contentDiv.className = 'ml-6';
 
         // Process paragraphs
         if (article.paragraphs && article.paragraphs.length) {
@@ -132,7 +132,7 @@ class ArticleAccordionComponent {
                 }
 
                 const subheader = document.createElement('h6');
-                subheader.className = 'mt-3 mb-1 text-gray-800';
+                subheader.className = 'mt-2 mb-1 font-bold text-gray-800';
                 subheader.textContent = para.subheader;
                 contentDiv.appendChild(subheader);
 
