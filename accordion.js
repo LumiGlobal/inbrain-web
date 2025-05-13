@@ -101,7 +101,7 @@ class ArticleAccordionComponent {
 
         const accordionItem = document.createElement('div');
         accordionItem.setAttribute('data-accordion', 'collapse');
-        accordionItem.setAttribute('data-active-classes', 'bg-white font-bold underline');
+        accordionItem.setAttribute('data-active-classes', 'bg-white text-blue-800');
         accordionItem.setAttribute('data-inactive-classes', 'text-gray-900');
 
         const heading = document.createElement('h5');
@@ -113,11 +113,16 @@ class ArticleAccordionComponent {
 
         const body = document.createElement('div');
         body.id = bodyId;
-        body.className = 'hidden';
+        body.className = 'hidden ml-6 px-4 border-3 border-solid border-gray-600 rounded';
         body.setAttribute('aria-labelledby', headingId);
 
         const contentDiv = document.createElement('div');
-        contentDiv.className = 'ml-6';
+        
+        const title = document.createElement('h3')
+        title.className = 'text-2xl font-bold pt-3 pb-2'
+        title.textContent = article.title
+
+        contentDiv.appendChild(title)
 
         // Process paragraphs
         if (article.paragraphs && article.paragraphs.length) {
