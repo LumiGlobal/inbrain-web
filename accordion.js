@@ -65,7 +65,7 @@ class ArticleAccordionComponent {
 
         const body = document.createElement('div');
         body.id = bodyId;
-        body.className = 'hidden ml-2 px-4 py-2 border-3 border-solid border-gray-600 rounded';
+        body.className = 'hidden ml-2 px-4 py-2 border-1 border-solid border-gray-600 rounded';
         body.setAttribute('aria-labelledby', headingId);
 
         const contentDiv = document.createElement('div');
@@ -124,7 +124,7 @@ class ArticleAccordionComponent {
 
         const body = document.createElement('div');
         body.id = bodyId;
-        body.className = 'hidden ml-6 px-4 border-3 border-solid border-gray-600 rounded';
+        body.className = 'hidden ml-6 px-4 border-1 border-solid border-gray-600 rounded';
         body.setAttribute('aria-labelledby', headingId);
 
         const contentDiv = document.createElement('div');
