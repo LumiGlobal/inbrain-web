@@ -65,23 +65,34 @@ class ArticleAccordionComponent {
 
         const body = document.createElement('div');
         body.id = bodyId;
-        body.className = 'hidden';
+        body.className = 'hidden ml-2 px-4 py-2 border-3 border-solid border-gray-600 rounded';
         body.setAttribute('aria-labelledby', headingId);
 
         const contentDiv = document.createElement('div');
-        contentDiv.className = 'ml-4 p-2';
 
         // Add title
         const titleElem = document.createElement('h4');
-        titleElem.className = 'text-lg font-semibold mb-2';
+        titleElem.className = 'text-2xl font-bold mb-2';
         titleElem.textContent = this.articleData.title;
         contentDiv.appendChild(titleElem);
 
-        // Add description
-        const descElem = document.createElement('p');
-        descElem.className = 'text-gray-600 mb-3';
-        descElem.textContent = this.articleData.description;
-        contentDiv.appendChild(descElem);
+        if (this.articleData.description && this.articleData.description.length !== 0) {
+            const descTitle = document.createElement('p');
+            descTitle.textContent = "Description"
+            descTitle.className = 'font-bold mb-3';
+            contentDiv.appendChild(descTitle);
+
+            // Add description
+            const descElem = document.createElement('p');
+            descElem.className = 'text-gray-600 mb-3';
+            descElem.textContent = this.articleData.description;
+            contentDiv.appendChild(descElem);
+        }
+
+        const contentTitle = document.createElement('p');
+        contentTitle.textContent = "Content"
+        contentTitle.className = 'font-bold mb-3';
+        contentDiv.appendChild(contentTitle);
 
         // Add content
         const contentElem = document.createElement('p');
@@ -128,10 +139,9 @@ class ArticleAccordionComponent {
         if (article.paragraphs && article.paragraphs.length) {
             article.paragraphs.forEach((para, i) => {
                 if (!para.subheader || !para.content) {
-                    // return
                     const error = document.createElement("p")
                     error.textContent = `Subheader ${i + 1} or Content ${i + 1} is missing. Regenerate articles with ID: ${this.articleData.id}`
-                    error.className = "text-red-500"
+                    error.className = "text-red-500 mb-2 font-bold"
                     contentDiv.appendChild(error)
                     return
                 }
