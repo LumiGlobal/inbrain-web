@@ -9,8 +9,8 @@ const articlesContainer = document.getElementById("articles-container")
 const articlesHeader = document.getElementById("articles-header")
 const errorHeader = document.getElementById("error")
 const index = document.getElementById("index")
-const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
-// const baseUrl = "http://127.0.0.1:3000";
+// const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
+const baseUrl = "http://127.0.0.1:3000";
 
 generateArticleBtn.addEventListener("click", generateArticles);
 getArticleBtn.addEventListener("click", getArticle);
@@ -19,6 +19,31 @@ index.addEventListener("click", (e) => {
   e.preventDefault()
   allArticles()
 })
+
+async function getNewsPublishersList() {
+  const response = await fetch(`${baseUrl}/v1/news_publishers`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${api_key}`,
+    },
+    credentials: "include"
+  });
+
+  const data = await response.json()
+  const select = document.getElementById("publisher")
+  data.forEach((publisher, i) => {
+    const option = document.createElement("option")
+    option.value = publisher.id
+    option.textContent = publisher.name
+
+    if (i === 0) {
+      option.selected = true
+    }
+
+    select.appendChild(option)
+  })
+  console.log(data)
+}
 
 
 async function allArticles () {
@@ -170,6 +195,7 @@ window.onload = () => {
   if (api_key === null) {
     location.href = "index.html"
   } else {
+    getNewsPublishersList()
     allArticles()
   }
 };
