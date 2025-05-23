@@ -105,7 +105,7 @@
                     </div>
                     <h2 id="accordion-flush-heading-2">
                         <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800" data-accordion-target="#accordion-flush-body-2" aria-expanded="false" aria-controls="accordion-flush-body-2">
-                            <span class="text-xl">Fetch Articles by Primary Article ID</span>
+                            <span class="text-xl">Fetch Articles by Article ID</span>
                             <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
                             </svg>
@@ -118,7 +118,7 @@
                                 <input type="number" id="article-id" class="mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="17" required />
                                 <input
                                         type="submit"
-                                        value="Get Articles"
+                                        value="Fetch Articles"
                                         id="get-articles"
                                         class="text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                                 />
@@ -127,7 +127,7 @@
                     </div>
                     <h2 id="accordion-flush-heading-3">
                         <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800" data-accordion-target="#accordion-flush-body-3" aria-expanded="false" aria-controls="accordion-flush-body-3">
-                            <span class="text-xl">All Articles by Language</span>
+                            <span class="text-xl">Articles by Language</span>
                             <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
                             </svg>
@@ -136,18 +136,18 @@
                     <div id="accordion-flush-body-3" class="hidden" aria-labelledby="accordion-flush-heading-3">
                         <div>
                             <form>
-                                <label for="language" class="block mb-2 text-base font-medium text-gray-900 ">Filter by Language*:</label>
+                                <label for="language" class="block mb-2 text-base font-medium text-gray-900">Language*:</label>
                                 <select id="language" class="mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                     <option value="" selected>All</option>
                                     <option value="en">English</option>
                                     <option value="ms">Malay</option>
                                     <option value="zh">Chinese</option>
                                 </select>
-                                <label for="limit" class="block mb-2 text-base font-medium text-gray-900">Limit*:</label>
+                                <label for="limit" class="block mb-2 text-base font-medium text-gray-900">Number of Articles to Fetch*:</label>
                                 <input type="number" id="limit" class="mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="10" value="10" required />
                                 <input
                                         type="submit"
-                                        value="Get Articles"
+                                        value="Fetch Articles"
                                         id="index"
                                         class="text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                                 />
@@ -156,7 +156,7 @@
                         </div>
                     <h2 id="accordion-flush-heading-5">
                         <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800" data-accordion-target="#accordion-flush-body-5" aria-expanded="false" aria-controls="accordion-flush-body-3">
-                            <span class="text-xl">Latest Articles by Publisher</span>
+                            <span class="text-xl">Articles by Publisher</span>
                             <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
                             </svg>
@@ -165,26 +165,45 @@
                     <div id="accordion-flush-body-5" class="hidden" aria-labelledby="accordion-flush-heading-3">
                         <div>
                             <form>
-                                <label for="publisher-list-2" class="block mb-2 text-base font-medium text-gray-900 ">News Publisher:</label>
+                                <label for="publisher-list-2" class="block mb-2 text-base font-medium text-gray-900 ">Publisher:</label>
                                 <select id="publisher-list-2" class="publisher-list mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 </select>
-                                <label for="publisher-query-limit" class="block mb-2 text-base font-medium text-gray-900">Limit*:</label>
+                                <label for="publisher-query-limit" class="block mb-2 text-base font-medium text-gray-900">Number of Articles to Fetch:</label>
                                 <input type="number" id="publisher-query-limit" class="mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="10" value="10" required />
-                                <div class="flex flex-col gap-2 items-start ">
-                                    <input
-                                            type="submit"
-                                            value="Pull Latest Articles For Publisher"
-                                            id="publisher-pull-submit"
-                                            class="text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                                    />
-                                    <input
-                                            type="submit"
-                                            value="Fetch Articles"
-                                            id="publisher-query-submit"
-                                            class="text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                                    />
-                                </div>
+                                <input
+                                        type="submit"
+                                        value="Fetch Articles"
+                                        id="publisher-query-submit"
+                                        class="text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                />
                             </form>
+
+                        </div>
+                    </div>
+                    <h2 id="accordion-flush-heading-6">
+                        <button type="button" class="flex items-center justify-between w-full py-2 font-medium rtl:text-right text-gray-900 gap-3 hover:text-blue-800" data-accordion-target="#accordion-flush-body-6" aria-expanded="false" aria-controls="accordion-flush-body-3">
+                            <span class="text-xl">Pull Latest Articles for Publisher</span>
+                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+                            </svg>
+                        </button>
+                    </h2>
+                    <div id="accordion-flush-body-6" class="hidden" aria-labelledby="accordion-flush-heading-3">
+                        <div>
+                            <form>
+                                <label for="publisher-list-1" class="block mb-2 text-base font-medium text-gray-900 ">Publisher:</label>
+                                <select id="publisher-list-1" class="publisher-list mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                </select>
+                                <label for="publisher-pull-limit" class="block mb-2 text-base font-medium text-gray-900">Number of Articles to Pull:</label>
+                                <input type="number" id="publisher-pull-limit" class="mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="10" value="10" required />
+                                <input
+                                        type="submit"
+                                        value="Pull Articles"
+                                        id="publisher-pull-submit"
+                                        class="text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                />
+                            </form>
+
                         </div>
                     </div>
                 </div>

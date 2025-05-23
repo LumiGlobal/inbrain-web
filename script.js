@@ -10,6 +10,7 @@ const articlesHeader = document.getElementById("articles-header")
 const errorHeader = document.getElementById("error")
 const index = document.getElementById("index")
 const publisherArticlesBtn = document.getElementById("publisher-query-submit")
+const publisherPullBtn = document.getElementById("publisher-pull-submit")
 // const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
 const baseUrl = "http://127.0.0.1:3000";
 
@@ -38,6 +39,36 @@ publisherArticlesBtn.addEventListener("click", (e) => {
   allArticles(params)
 })
 
+publisherPullBtn.addEventListener("click", (e) => {
+  e.preventDefault()
+  const limit = document.getElementById("publisher-pull-limit").value
+  const newsPublisherInput = document.getElementById("publisher-list-1")
+  const newsPublisherId = newsPublisherInput.value
+  const newsPublisherName = newsPublisherInput.options[newsPublisherInput.selectedIndex].textContent
+  const headerTextContent = `${limit} Most Recent Articles for ${newsPublisherName}`
+  pullLatestArticlesForPublisher(newsPublisherId, headerTextContent)
+})
+
+async function pullLatestArticlesForPublisher(newsPublisherId, headerTextContent) {
+  const payload = JSON.stringify({ news_publisher_id: newsPublisherId })
+  const response = await fetch(`${baseUrl}/v1/news_publishers/pull`, {
+    method: "POST",
+    body: payload,
+    headers: {
+      Authorization: `Bearer ${api_key}`,
+      "Content-Type": "application/json; charset=UTF-8",
+    },
+    credentials: "include"
+  });
+  const data = await response.json()
+  console.log(data)
+  clearAccordions()
+  setArticleHeader(headerTextContent)
+  data.forEach((article, i) => {
+    createAccordion(i, article)
+  })
+  window.initFlowbite()
+}
 
 
 async function getNewsPublishersList() {
