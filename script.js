@@ -46,11 +46,11 @@ publisherPullBtn.addEventListener("click", (e) => {
   const newsPublisherId = newsPublisherInput.value
   const newsPublisherName = newsPublisherInput.options[newsPublisherInput.selectedIndex].textContent
   const headerTextContent = `${limit} Most Recent Articles for ${newsPublisherName}`
-  pullLatestArticlesForPublisher(newsPublisherId, headerTextContent)
+  pullLatestArticlesForPublisher(newsPublisherId, limit, headerTextContent)
 })
 
-async function pullLatestArticlesForPublisher(newsPublisherId, headerTextContent) {
-  const payload = JSON.stringify({ news_publisher_id: newsPublisherId })
+async function pullLatestArticlesForPublisher(newsPublisherId, limit, headerTextContent) {
+  const payload = JSON.stringify({ news_publisher_id: newsPublisherId, limit: limit })
   const response = await fetch(`${baseUrl}/v1/news_publishers/pull`, {
     method: "POST",
     body: payload,
