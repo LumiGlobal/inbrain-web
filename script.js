@@ -30,19 +30,20 @@ async function getNewsPublishersList() {
   });
 
   const data = await response.json()
-  const select = document.getElementById("publisher")
+  const publisherLists = document.getElementsByClassName("publisher-list")
   data.forEach((publisher, i) => {
-    const option = document.createElement("option")
-    option.value = publisher.id
-    option.textContent = publisher.name
+    [...publisherLists].forEach((select) => {
+      const option = document.createElement("option")
+      option.value = publisher.id
+      option.textContent = publisher.name
 
-    if (i === 0) {
-      option.selected = true
-    }
+      if (i === 0) {
+        option.selected = true
+      }
 
-    select.appendChild(option)
+      select.appendChild(option)
+    })
   })
-  console.log(data)
 }
 
 
@@ -59,6 +60,7 @@ async function allArticles () {
     credentials: "include"
   });
   const data = await response.json()
+  console.log(data)
   clearAccordions()
   const language = langInput.options[langInput.selectedIndex].textContent
   setArticleHeader(`${limit} Most Recent Articles in ${language} Language`)

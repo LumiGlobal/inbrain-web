@@ -276,6 +276,13 @@ class ArticleAccordionComponent {
         mainBody.className = 'hidden';
         mainBody.setAttribute('aria-labelledby', mainHeadingId);
 
+        if (this.articleData.news_publisher_name) {
+            const newsPublisherDiv = document.createElement('div');
+            newsPublisherDiv.className = 'mb-1 text-sm font-medium text-gray-600';
+            newsPublisherDiv.textContent = `Publisher: ${this.articleData.news_publisher_name}`;
+            mainBody.appendChild(newsPublisherDiv);
+        }
+
         // Add category info if exists
         if (this.articleData.generated_articles && this.articleData.generated_articles.main_category) {
             const categoryDiv = document.createElement('div');
