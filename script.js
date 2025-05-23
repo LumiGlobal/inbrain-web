@@ -9,6 +9,7 @@ const articlesContainer = document.getElementById("articles-container")
 const articlesHeader = document.getElementById("articles-header")
 const errorHeader = document.getElementById("error")
 const index = document.getElementById("index")
+const publisherArticlesBtn = document.getElementById("publisher-query-submit")
 // const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
 const baseUrl = "http://127.0.0.1:3000";
 
@@ -17,8 +18,27 @@ getArticleBtn.addEventListener("click", getArticle);
 regenerateBtn.addEventListener("click", regenerateArticles)
 index.addEventListener("click", (e) => {
   e.preventDefault()
-  allArticles()
+  const limit = document.getElementById("limit").value
+  const langInput = document.getElementById("language")
+  const languageCode = langInput.value
+  const language = langInput.options[langInput.selectedIndex].textContent
+  const headerTextContent = `${limit} Most Recent Articles in ${language} Language`
+  const params = {languageCode: languageCode, limit: limit, headerTextContent: headerTextContent}
+  allArticles(params)
 })
+
+publisherArticlesBtn.addEventListener("click", (e) => {
+  e.preventDefault()
+  const limit = document.getElementById("publisher-query-limit").value
+  const newsPublisherInput = document.getElementById("publisher-list-2")
+  const newsPublisherId = newsPublisherInput.value
+  const newsPublisherName = newsPublisherInput.options[newsPublisherInput.selectedIndex].textContent
+  const headerTextContent = `${limit} Most Recent Articles for ${newsPublisherName}`
+  const params = {newsPublisherId: newsPublisherId, limit: limit, headerTextContent: headerTextContent}
+  allArticles(params)
+})
+
+
 
 async function getNewsPublishersList() {
   const response = await fetch(`${baseUrl}/v1/news_publishers`, {
@@ -46,12 +66,8 @@ async function getNewsPublishersList() {
   })
 }
 
-
-async function allArticles () {
-  const limit = document.getElementById("limit").value
-  const langInput = document.getElementById("language")
-  const languageCode = langInput.value
-  const params = new URLSearchParams({ limit: limit, language_code: languageCode }).toString()
+async function allArticles ({languageCode = "", newsPublisherId = "", limit = "10", headerTextContent = "" }) {
+  const params = new URLSearchParams({ limit: limit, language_code: languageCode, news_publisher_id: newsPublisherId }).toString()
   const response = await fetch(`${baseUrl}/v1/articles/?${params}` , {
     method: "GET",
     headers: {
@@ -62,8 +78,7 @@ async function allArticles () {
   const data = await response.json()
   console.log(data)
   clearAccordions()
-  const language = langInput.options[langInput.selectedIndex].textContent
-  setArticleHeader(`${limit} Most Recent Articles in ${language} Language`)
+  setArticleHeader(headerTextContent)
   data.forEach((article, i) => {
     createAccordion(i, article)
   })
@@ -198,7 +213,8 @@ window.onload = () => {
     location.href = "index.html"
   } else {
     getNewsPublishersList()
-    allArticles()
+    const headerTextContent = "10 Most Recent Articles in All Language"
+    allArticles({ headerTextContent: headerTextContent })
   }
 };
 
