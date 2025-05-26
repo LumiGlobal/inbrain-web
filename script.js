@@ -11,8 +11,8 @@ const errorHeader = document.getElementById("error")
 const index = document.getElementById("index")
 const publisherArticlesBtn = document.getElementById("publisher-query-submit")
 const publisherPullBtn = document.getElementById("publisher-pull-submit")
-// const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
-const baseUrl = "http://127.0.0.1:3000";
+const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
+// const baseUrl = "http://127.0.0.1:3000";
 
 generateArticleBtn.addEventListener("click", generateArticles);
 getArticleBtn.addEventListener("click", getArticle);
