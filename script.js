@@ -3,20 +3,37 @@ const api_key = sessionStorage.getItem("api_key")
 const generateArticleBtn = document.getElementById("generate-articles");
 const getArticleBtn = document.getElementById("get-articles");
 const regenerateBtn = document.getElementById("regen-article")
-const generateLoadingBtn = document.getElementById("loading-button")
-const regenerateLoadingBtn = document.getElementById("regen-loading")
 const articlesContainer = document.getElementById("articles-container")
 const articlesHeader = document.getElementById("articles-header")
 const errorHeader = document.getElementById("error")
 const index = document.getElementById("index")
 const publisherArticlesBtn = document.getElementById("publisher-query-submit")
 const publisherPullBtn = document.getElementById("publisher-pull-submit")
-const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
-// const baseUrl = "http://127.0.0.1:3000";
+const regenerateButtons = document.getElementsByClassName("regenerate")
+const generateLoadingBtn = document.getElementById("loading-button")
+// const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
+const baseUrl = "http://127.0.0.1:3000";
 
 generateArticleBtn.addEventListener("click", generateArticles);
 getArticleBtn.addEventListener("click", getArticle);
-regenerateBtn.addEventListener("click", regenerateArticles)
+
+function attachEventListenersToRegenerateBtns() {
+  [...regenerateButtons].forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault()
+      const regenerateLoadingBtn = document.querySelector(`[data-regenerate-loading-id="${btn.dataset.regenerateSubmitId}"]`)
+      let id;
+      if (btn.dataset.regenerateSubmitId === "0") {
+        id = document.getElementById("regen-form-id").value
+      } else {
+        id = btn.dataset.regenerateSubmitId
+      }
+
+      regenerateArticles(btn, regenerateLoadingBtn, id)
+    })
+  })
+}
+
 index.addEventListener("click", (e) => {
   e.preventDefault()
   const limit = document.getElementById("limit").value
@@ -113,6 +130,7 @@ async function allArticles ({languageCode = "", newsPublisherId = "", limit = "1
   data.forEach((article, i) => {
     createAccordion(i, article)
   })
+  attachEventListenersToRegenerateBtns()
   window.initFlowbite()
 }
 function clearAccordions() {
@@ -133,10 +151,7 @@ function setLoading(btn, loadingBtn, isLoading) {
   }
 }
 
-async function regenerateArticles(e) {
-  e.preventDefault()
-  const id = document.getElementById("regen-article-id").value
-
+async function regenerateArticles(regenerateBtn, regenerateLoadingBtn,  id) {
   setLoading(regenerateBtn, regenerateLoadingBtn, true)
   const response = await fetch(`${baseUrl}/v1/articles/${id}/regenerate`, {
     method: "POST",
@@ -149,6 +164,7 @@ async function regenerateArticles(e) {
   clearAccordions()
   createAccordion(0, data)
   setArticleHeader(`Article ${data.id} Regenerated`)
+  attachEventListenersToRegenerateBtns()
   window.initFlowbite()
   setLoading(regenerateBtn, regenerateLoadingBtn, false)
 }
@@ -191,6 +207,7 @@ async function generateArticles(e) {
   clearAccordions()
   createAccordion(0, data)
   setArticleHeader(`Article ${data.id} Generated`)
+  attachEventListenersToRegenerateBtns()
   window.initFlowbite()
   setLoading(generateArticleBtn, generateLoadingBtn, false)
 }
@@ -214,6 +231,7 @@ async function getArticle(e) {
   const data = await response.json();
   createAccordion(0, data)
   setArticleHeader(`Article ${data.id}`)
+  attachEventListenersToRegenerateBtns()
   window.initFlowbite()
 }
 
