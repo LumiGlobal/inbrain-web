@@ -344,11 +344,11 @@ class ArticleAccordionComponent {
             error.innerHTML = `Article ${this.articleData.id} does not have generated articles. Regenerate article with ID: ${this.articleData.id}.`
             error.className = "ml-2 text-red-500"
             mainBody.appendChild(error)
-            let mainBtn, regenerateBtn
-            [mainBtn, regenerateBtn] = this.getButtons(this.articleData.id)
-            mainBody.appendChild(mainBtn)
-            mainBody.appendChild(regenerateBtn)
         }
+
+        const [mainBtn, regenerateBtn] = this.getButtons(this.articleData.id)
+        mainBody.appendChild(mainBtn)
+        mainBody.appendChild(regenerateBtn)
 
         mainAccordion.appendChild(mainBody);
         this.container.appendChild(mainAccordion);

@@ -1,5 +1,5 @@
-// const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
-const baseUrl = "http://127.0.0.1:3000";
+const baseUrl = "https://inbrain-97862438951.asia-southeast1.run.app";
+// const baseUrl = "http://127.0.0.1:3000";
 const saveKeyBtn = document.getElementById("save-key");
 const message = document.getElementById("message");
 saveKeyBtn.addEventListener("click", saveKey);

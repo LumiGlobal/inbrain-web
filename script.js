@@ -24,8 +24,8 @@ class Articles {
   }
 
   getBaseUrl() {
-    return "http://127.0.0.1:3000";
-    // return "https://inbrain-97862438951.asia-southeast1.run.app";
+    // return "http://127.0.0.1:3000";
+    return "https://inbrain-97862438951.asia-southeast1.run.app";
   }
 
   // DOM Elements
