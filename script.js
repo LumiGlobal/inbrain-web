@@ -179,7 +179,8 @@ class Articles {
     return {
       languageCode,
       limit,
-      headerTextContent: `${limit} Most Recent Articles in ${languageName} Language`
+      headerTextContent: `${limit} Most Recent Articles in ${languageName} Language`,
+      languageName
     };
   }
 
@@ -192,7 +193,8 @@ class Articles {
     return {
       newsPublisherId,
       limit,
-      headerTextContent: `${limit} Most Recent Articles for ${newsPublisherName}`
+      headerTextContent: `${limit} Most Recent Articles for ${newsPublisherName}`,
+      newsPublisherName
     };
   }
 
@@ -205,7 +207,8 @@ class Articles {
     return {
       newsPublisherId,
       limit,
-      headerTextContent: `${limit} Most Recent Articles for ${newsPublisherName}`
+      headerTextContent: `${limit} Most Recent Articles for ${newsPublisherName}`,
+      newsPublisherName
     };
   }
 
@@ -306,10 +309,28 @@ class Articles {
     this.initializeFlowbite();
   }
 
+  displayEmpty(params) {
+    let message
+    if (params.languageName) {
+      message = `There are no articles in ${params.languageName}. Create some or pull articles from ${params.languageName} publishers!`
+    } else if (params.newsPublisherName) {
+      message = `There are no articles for ${params.newsPublisherName}. Please pull articles for ${params.newsPublisherName} first!`
+    } else {
+      message = `There are no articles in the Database.`
+    }
+
+    this.renderError(message)
+  }
+
   async fetchAndDisplayArticles(params) {
     try {
       const data = await this.fetchArticles(params);
-      this.displayArticles(data, params.headerTextContent);
+
+      if (data.length === 0) {
+        this.displayEmpty(params)
+      } else {
+        this.displayArticles(data, params.headerTextContent);
+      }
     } catch (error) {
       this.handleError(error);
     }
