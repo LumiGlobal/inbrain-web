@@ -39,6 +39,7 @@ class Articles {
       fetchArticlesByLanguageBtn: document.getElementById("fetch-articles-by-language-btn"),
       fetchArticlesByPublisherBtn: document.getElementById("fetch-articles-by-publisher-btn"),
       pullArticlesForPublisherBtn: document.getElementById("pull-articles-for-publisher-btn"),
+      pullLoadingBtn: document.getElementById("pull-articles-loading-btn"),
       generateLoadingBtn: document.getElementById("generate-loading-button"),
 
       // Form inputs
@@ -136,10 +137,13 @@ class Articles {
     const { newsPublisherId, limit, headerTextContent } = this.pullArticlesForPublisherParams();
 
     try {
+      this.setLoading(this.elements.pullArticlesForPublisherBtn, this.elements.pullLoadingBtn, true)
       const data = await this.pullLatestArticlesForPublisher(newsPublisherId, limit);
       this.displayArticles(data, headerTextContent);
     } catch (error) {
       this.handleError(error);
+    } finally {
+      this.setLoading(this.elements.pullArticlesForPublisherBtn, this.elements.pullLoadingBtn, false)
     }
   }
 
