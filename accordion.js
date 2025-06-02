@@ -205,8 +205,8 @@ class ArticleAccordionComponent {
     getButtons(isRegenerate) {
         const mainBtn = document.createElement('button')
         mainBtn.setAttribute("data-regenerate-submit-id", this.articleData.id)
-        mainBtn.classList = "regenerate text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-1"
-        mainBtn.textContent = `${isRegenerate ? "Regenerate" : "Generate"} Article`
+        mainBtn.classList = "regenerate text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-1 hover:cursor-pointer"
+        mainBtn.textContent = `${isRegenerate ? "Regenerate" : "Generate"} Articles`
 
         const animationBtn = document.createElement("button")
         animationBtn.setAttribute("data-regenerate-loading-id", this.articleData.id)
@@ -214,6 +214,24 @@ class ArticleAccordionComponent {
         animationBtn.innerHTML = `<svg class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">\n                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>\n                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>\n                                        </svg>\n                                        ${ isRegenerate ? "Regenerating..." : "Generating..." }`
 
         return [mainBtn, animationBtn]
+    }
+    
+    backLink() {
+        const link = document.createElement('a')
+        link.classList = "inline-flex items-center text-blue-900 bg-white ml-1 hover:text-blue-700 font-medium rounded-lg text-sm text-center my-10 hover:cursor-pointer"
+        link.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18">
+            </path>
+        </svg>
+        <span class="ml-1">Back</span>
+        `
+
+        link.addEventListener('click', (e) => {
+            history.back()
+        })
+
+        return link
     }
 
     render() {
@@ -263,7 +281,7 @@ class ArticleAccordionComponent {
         } else {
             const error = document.createElement("p")
             error.innerHTML = "No Generated Articles"
-            error.classList = "mb-2"
+            error.classList = "mb-2 font-bold"
             mainBody.appendChild(error)
             isRegenerate = false
         }
@@ -273,6 +291,7 @@ class ArticleAccordionComponent {
         mainBody.appendChild(regenerateBtn)
 
         mainAccordion.appendChild(mainBody);
+        mainAccordion.appendChild(this.backLink())
         this.container.appendChild(mainAccordion);
         this.container.querySelectorAll('[data-accordion-target]').forEach(button => {
             button.addEventListener('click', (event) => {
