@@ -305,12 +305,25 @@ class Articles {
     this.clearAccordions();
     this.setArticleHeader(headerText);
 
-    articles.forEach((article, index) => {
-      this.createAccordion(index, article);
+    articles.forEach((article) => {
+      this.showArticleLink(article);
     });
 
     this.bindRegenerateButtons();
     this.initializeFlowbite();
+  }
+
+  showArticleLink(article) {
+    const container = document.createElement('div')
+    container.classList = "my-5"
+
+    const link = document.createElement('a')
+    link.attributes.articleId = `${article.id}`
+    link.textContent = `${article.id}: ${article.title}`
+    link.classList = "hover:text-blue-800 hover:cursor-pointer"
+
+    container.appendChild(link)
+    this.elements.articlesContainer?.appendChild(container);
   }
 
   displayEmpty(params) {
@@ -416,11 +429,11 @@ class Articles {
   async initialize() {
     try {
       await this.populateNewsPublishers();
-      // const { newsPublisherId, limit, headerTextContent } = this.pullArticlesForPublisherParams();
-      // const data = await this.pullLatestArticlesForPublisher(newsPublisherId, limit);
-      // this.displayArticles(data, headerTextContent);
-      const data = await this.getArticle(336);
-      this.displaySingleArticle(data, `${data.id}: ${data.title}`);
+      const { newsPublisherId, limit, headerTextContent } = this.pullArticlesForPublisherParams();
+      const data = await this.pullLatestArticlesForPublisher(newsPublisherId, limit);
+      this.displayArticles(data, headerTextContent);
+      // const data = await this.getArticle(336);
+      // this.displaySingleArticle(data, `${data.id}: ${data.title}`);
     } catch (error) {
       this.handleError(error);
     }
