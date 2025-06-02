@@ -48,27 +48,12 @@ class ArticleAccordionComponent {
     }
 
     renderPrimaryArticle() {
-        const headingId = this.generateUniqueId('primary-heading');
-        const bodyId = this.generateUniqueId('primary-body');
-
         const accordionItem = document.createElement('div');
         accordionItem.className = "my-2"
 
-        const heading = document.createElement('h3');
-        heading.id = headingId;
-
         const body = document.createElement('div');
-        body.id = bodyId;
-        body.className = 'px-2 py-2 border-1 border-solid border-gray-400 rounded';
-        body.setAttribute('aria-labelledby', headingId);
 
         const contentDiv = document.createElement('div');
-
-        // Add title
-        const titleElem = document.createElement('h4');
-        titleElem.className = 'text-lg font-bold mb-2';
-        titleElem.textContent = this.articleData.title;
-        contentDiv.appendChild(titleElem);
 
         if (this.articleData.description && this.articleData.description.length !== 0) {
             const descTitle = document.createElement('p');
@@ -78,7 +63,7 @@ class ArticleAccordionComponent {
 
             // Add description
             const descElem = document.createElement('p');
-            descElem.className = 'text-gray-600 mb-3';
+            descElem.className = 'mb-3';
             descElem.textContent = this.articleData.description;
             contentDiv.appendChild(descElem);
         }
@@ -90,7 +75,6 @@ class ArticleAccordionComponent {
 
         // Add content
         const contentElem = document.createElement('p');
-        contentElem.className = 'text-gray-700';
         contentElem.textContent = this.articleData.content;
         contentDiv.appendChild(contentElem);
 
@@ -106,28 +90,23 @@ class ArticleAccordionComponent {
 
         const accordionItem = document.createElement('div');
         accordionItem.setAttribute('data-accordion', 'collapse');
-        accordionItem.setAttribute('data-active-classes', 'bg-white text-blue-800');
+        accordionItem.setAttribute('data-active-classes', 'bg-white text-blue-800 font-bold');
         accordionItem.setAttribute('data-inactive-classes', 'text-gray-900');
 
         const heading = document.createElement('h5');
         heading.id = headingId;
 
-        const button = this.createAccordionButton(article.title, bodyId, false, 2);
+        const button = this.createAccordionButton(article.title, bodyId, false, 1);
         heading.appendChild(button);
         accordionItem.appendChild(heading);
 
         const body = document.createElement('div');
         body.id = bodyId;
-        body.className = 'hidden ml-6 px-4 border-1 border-solid border-gray-600 rounded';
+        body.className = 'hidden ml-2 px-4 border-1 border-solid border-gray-600 rounded';
         body.setAttribute('aria-labelledby', headingId);
 
         const contentDiv = document.createElement('div');
-        
-        const title = document.createElement('h3')
-        title.className = 'text-lg font-bold pt-3 pb-2'
-        title.textContent = article.title
-
-        contentDiv.appendChild(title)
+        contentDiv.className = "py-2 flex flex-col gap-3"
 
         // Process paragraphs
         if (article.paragraphs && article.paragraphs.length) {
@@ -135,20 +114,24 @@ class ArticleAccordionComponent {
                 if (!para.subheader || !para.content) {
                     const error = document.createElement("p")
                     error.textContent = `Subheader ${i + 1} or Content ${i + 1} is missing. Please regenerate articles.`
-                    error.className = "text-red-500 mb-2 font-bold"
+                    error.className = "text-red-500 font-bold"
                     contentDiv.appendChild(error)
                     return
                 }
 
+                const paragraphDiv = document.createElement('div')
+
                 const subheader = document.createElement('h6');
-                subheader.className = 'mt-2 mb-1 font-bold text-gray-800';
+                subheader.className = 'font-bold text-gray-800';
                 subheader.textContent = para.subheader;
-                contentDiv.appendChild(subheader);
+                paragraphDiv.appendChild(subheader);
 
                 const content = document.createElement('p');
-                content.className = 'text-gray-700 mb-2';
+                content.className = 'text-gray-700';
                 content.textContent = para.content;
-                contentDiv.appendChild(content);
+                paragraphDiv.appendChild(content);
+
+                contentDiv.appendChild(paragraphDiv)
 
                 // Add source (small and light gray)
                 // if (para.source) {
@@ -175,25 +158,14 @@ class ArticleAccordionComponent {
     }
 
     renderSubjectArticles() {
-        const headingId = this.generateUniqueId('subject-heading');
-        const bodyId = this.generateUniqueId('subject-body');
-
         const accordionItem = document.createElement('div');
-        accordionItem.setAttribute('data-accordion', 'collapse');
-        accordionItem.setAttribute('data-active-classes', 'bg-white text-blue-800');
-        accordionItem.setAttribute('data-inactive-classes', 'text-gray-900');
-
         const heading = document.createElement('h4');
-        heading.id = headingId;
+        heading.textContent = 'Subject Articles'
+        heading.className = "my-2 font-bold"
 
-        const button = this.createAccordionButton('Subject Articles', bodyId, false, 1);
-        heading.appendChild(button);
         accordionItem.appendChild(heading);
 
         const body = document.createElement('div');
-        body.id = bodyId;
-        body.className = 'hidden';
-        body.setAttribute('aria-labelledby', headingId);
 
         // Add each subject article
         if (this.articleData.generated_articles.subject_articles &&
@@ -208,25 +180,15 @@ class ArticleAccordionComponent {
     }
 
     renderTaboolaArticles() {
-        const headingId = this.generateUniqueId('taboola-heading');
-        const bodyId = this.generateUniqueId('taboola-body');
-
         const accordionItem = document.createElement('div');
-        accordionItem.setAttribute('data-accordion', 'collapse');
-        accordionItem.setAttribute('data-active-classes', 'bg-white text-blue-800');
-        accordionItem.setAttribute('data-inactive-classes', 'text-gray-900');
 
         const heading = document.createElement('h4');
-        heading.id = headingId;
+        heading.textContent = 'Taboola Articles'
+        heading.className = "my-2 font-bold"
 
-        const button = this.createAccordionButton('Taboola Articles', bodyId, false, 1);
-        heading.appendChild(button);
         accordionItem.appendChild(heading);
 
         const body = document.createElement('div');
-        body.id = bodyId;
-        body.className = 'hidden';
-        body.setAttribute('aria-labelledby', headingId);
 
         // Add each taboola article
         if (this.articleData.generated_articles.taboola_articles &&
@@ -260,42 +222,22 @@ class ArticleAccordionComponent {
 
         // Create main accordion
         const mainAccordion = document.createElement('div');
-        mainAccordion.id = 'main-accordion-collapse';
-        mainAccordion.setAttribute('data-accordion', 'collapse');
-        mainAccordion.setAttribute('data-active-classes', 'bg-white text-blue-800');
-        mainAccordion.setAttribute('data-inactive-classes', 'text-gray-900');
-
-        // Create main heading
-        const mainHeadingId = 'main-accordion-heading-1';
-        const mainBodyId = 'main-accordion-body-1';
-
-        const mainHeading = document.createElement('h2');
-        mainHeading.id = mainHeadingId;
-
-        const mainButton = this.createAccordionButton(`${this.articleData.id}: ${this.articleData.title}`, mainBodyId, false);
-        mainButton.querySelector('span').className = 'text-base truncate';
-
-        mainHeading.appendChild(mainButton);
-        mainAccordion.appendChild(mainHeading);
 
         // Create main body that contains all sections
         const mainBody = document.createElement('div');
-        mainBody.id = mainBodyId;
-        mainBody.className = 'hidden';
-        mainBody.setAttribute('aria-labelledby', mainHeadingId);
 
         if (this.articleData.news_publisher_name) {
             const newsPublisherDiv = document.createElement('div');
-            newsPublisherDiv.className = 'mb-1 text-sm font-medium text-gray-600';
-            newsPublisherDiv.textContent = `Publisher: ${this.articleData.news_publisher_name}`;
+            newsPublisherDiv.className = 'inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-700/10 ring-inset';
+            newsPublisherDiv.textContent = `${this.articleData.news_publisher_name}`;
             mainBody.appendChild(newsPublisherDiv);
         }
 
         // Add category info if exists
         if (this.articleData.generated_articles && this.articleData.generated_articles.main_category) {
             const categoryDiv = document.createElement('div');
-            categoryDiv.className = 'mb-3 text-sm font-medium text-gray-600';
-            categoryDiv.textContent = `Category: ${this.articleData.generated_articles.main_category}`;
+            categoryDiv.className = 'ml-2 inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset';
+            categoryDiv.textContent = `${this.articleData.generated_articles.main_category}`;
             mainBody.appendChild(categoryDiv);
         }
 
@@ -306,26 +248,9 @@ class ArticleAccordionComponent {
 
         if (this.articleData.generated_articles) {
             // Create generated articles section
-            const generatedHeadingId = this.generateUniqueId('generated-heading');
-            const generatedBodyId = this.generateUniqueId('generated-body');
-
             const generatedSection = document.createElement('div');
-            generatedSection.setAttribute('data-accordion', 'collapse');
-            generatedSection.setAttribute('data-active-classes', 'bg-white text-blue-800');
-            generatedSection.setAttribute('data-inactive-classes', 'text-gray-900');
-
-            const generatedHeading = document.createElement('h3');
-            generatedHeading.id = generatedHeadingId;
-
-            const generatedButton = this.createAccordionButton('Generated Articles', generatedBodyId, false, 0);
-            generatedHeading.appendChild(generatedButton);
-            generatedSection.appendChild(generatedHeading);
 
             const generatedBody = document.createElement('div');
-            generatedBody.id = generatedBodyId;
-            generatedBody.className = 'hidden';
-            generatedBody.setAttribute('aria-labelledby', generatedHeadingId);
-
 
             // Add subject articles section
             generatedBody.appendChild(this.renderSubjectArticles());
@@ -338,7 +263,7 @@ class ArticleAccordionComponent {
         } else {
             const error = document.createElement("p")
             error.innerHTML = "No Generated Articles"
-            error.className = "ml-2"
+            error.classList = "mb-2"
             mainBody.appendChild(error)
             isRegenerate = false
         }

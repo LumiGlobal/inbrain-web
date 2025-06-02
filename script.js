@@ -88,7 +88,7 @@ class Articles {
     try {
       this.setLoading(this.elements.generateArticleBtn, this.elements.generateLoadingBtn, true);
       const data = await this.generateArticle(articleData);
-      this.displaySingleArticle(data, `Article ${data.id} Generated`);
+      this.displaySingleArticle(data, `${data.id}: ${data.title}`);
     } catch (error) {
       this.handleError(error);
     } finally {
@@ -107,7 +107,7 @@ class Articles {
 
     try {
       const data = await this.getArticle(id);
-      this.displaySingleArticle(data, `Article ${data.id}`);
+      this.displaySingleArticle(data, `${data.id}: ${data.title}`);
     } catch (error) {
       if (error.status === 404) {
         this.renderError(`404: Article ${id} not found`);
@@ -156,7 +156,7 @@ class Articles {
     try {
       this.setLoading(btn, regenerateLoadingBtn, true);
       const data = await this.regenerateArticle(id);
-      this.displaySingleArticle(data, `Article ${data.id} Regenerated`);
+      this.displaySingleArticle(data, `${data.id}: ${data.title}`);
     } catch (error) {
       this.handleError(error);
     } finally {
@@ -420,7 +420,7 @@ class Articles {
       // const data = await this.pullLatestArticlesForPublisher(newsPublisherId, limit);
       // this.displayArticles(data, headerTextContent);
       const data = await this.getArticle(336);
-      this.displaySingleArticle(data, `Article ${336}`);
+      this.displaySingleArticle(data, `${data.id}: ${data.title}`);
     } catch (error) {
       this.handleError(error);
     }
