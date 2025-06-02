@@ -52,27 +52,21 @@ class ArticleAccordionComponent {
         const bodyId = this.generateUniqueId('primary-body');
 
         const accordionItem = document.createElement('div');
-        accordionItem.setAttribute('data-accordion', 'collapse');
-        accordionItem.setAttribute('data-active-classes', 'bg-white text-blue-800');
-        accordionItem.setAttribute('data-inactive-classes', 'text-gray-900');
+        accordionItem.className = "my-2"
 
         const heading = document.createElement('h3');
         heading.id = headingId;
 
-        const button = this.createAccordionButton('Primary Article', bodyId, false, 1);
-        heading.appendChild(button);
-        accordionItem.appendChild(heading);
-
         const body = document.createElement('div');
         body.id = bodyId;
-        body.className = 'hidden ml-2 px-4 py-2 border-1 border-solid border-gray-600 rounded';
+        body.className = 'px-2 py-2 border-1 border-solid border-gray-400 rounded';
         body.setAttribute('aria-labelledby', headingId);
 
         const contentDiv = document.createElement('div');
 
         // Add title
         const titleElem = document.createElement('h4');
-        titleElem.className = 'text-2xl font-bold mb-2';
+        titleElem.className = 'text-lg font-bold mb-2';
         titleElem.textContent = this.articleData.title;
         contentDiv.appendChild(titleElem);
 
@@ -130,7 +124,7 @@ class ArticleAccordionComponent {
         const contentDiv = document.createElement('div');
         
         const title = document.createElement('h3')
-        title.className = 'text-2xl font-bold pt-3 pb-2'
+        title.className = 'text-lg font-bold pt-3 pb-2'
         title.textContent = article.title
 
         contentDiv.appendChild(title)
@@ -157,20 +151,20 @@ class ArticleAccordionComponent {
                 contentDiv.appendChild(content);
 
                 // Add source (small and light gray)
-                if (para.source) {
-                    const source = document.createElement('p');
-                    source.className = 'text-xs text-gray-400 mb-3';
-                    source.textContent = `Source: `;
-
-                    const link = document.createElement("a")
-                    link.href = para.source
-                    link.textContent = para.source
-                    link.className = "hover:text-blue-500"
-                    link.target = "_blank"
-                    source.appendChild(link)
-
-                    contentDiv.appendChild(source);
-                }
+                // if (para.source) {
+                //     const source = document.createElement('p');
+                //     source.className = 'text-xs text-gray-400 mb-3';
+                //     source.textContent = `Source: `;
+                //
+                //     const link = document.createElement("a")
+                //     link.href = para.source
+                //     link.textContent = para.source
+                //     link.className = "hover:text-blue-500"
+                //     link.target = "_blank"
+                //     source.appendChild(link)
+                //
+                //     contentDiv.appendChild(source);
+                // }
             });
         }
 
