@@ -1,7 +1,7 @@
 import ArticleAccordionComponent from "./accordion.js";
 
 /**
- * Article Manager - Handles article generation, retrieval, and management
+ * Article Manager - Handles article generation, retrieval, and management with history
  */
 class Articles {
   constructor() {
@@ -9,13 +9,198 @@ class Articles {
     this.baseUrl = this.getBaseUrl();
     this.elements = this.initializeElements();
 
+    // History management
+    this.currentState = null;
+    this.isNavigating = false;
+
     if (!this.apiKey) {
       this.redirectToLogin();
       return;
     }
 
     this.bindEvents();
+    this.setupHistoryManagement();
     this.initialize();
+  }
+
+  // History Management Setup
+  setupHistoryManagement() {
+    // Listen for browser back/forward buttons
+    window.addEventListener('popstate', (e) => this.handlePopState(e));
+
+    // Set initial state if none exists
+    if (!history.state) {
+      this.updateHistory('initial', { type: 'initial' }, 'Articles');
+    }
+  }
+
+  handlePopState(event) {
+    if (event.state) {
+      this.isNavigating = true;
+      this.restoreState(event.state);
+      this.isNavigating = false;
+    }
+  }
+
+  // State Management
+  updateHistory(action, stateData, title = '') {
+    if (this.isNavigating) return; // Don't add history during navigation
+
+    const state = {
+      timestamp: Date.now(),
+      action,
+      ...stateData
+    };
+
+    this.currentState = state;
+    const url = this.buildUrlFromState(state);
+    history.pushState(state, title, url);
+  }
+
+  buildUrlFromState(state) {
+    const params = new URLSearchParams();
+
+    switch (state.type) {
+      case 'article-by-id':
+        params.set('view', 'article');
+        params.set('id', state.articleId);
+        break;
+      case 'articles-by-language':
+        params.set('view', 'language');
+        params.set('lang', state.languageCode);
+        params.set('limit', state.limit);
+        break;
+      case 'articles-by-publisher':
+        params.set('view', 'publisher');
+        params.set('publisher', state.newsPublisherId);
+        params.set('limit', state.limit);
+        break;
+      case 'pull-articles':
+        params.set('view', 'pull');
+        params.set('publisher', state.newsPublisherId);
+        params.set('limit', state.limit);
+        break;
+      case 'generate-article':
+        params.set('view', 'generated');
+        params.set('id', state.articleId);
+        break;
+      default:
+        return 'main.html';
+    }
+
+    return `main.html?${params.toString()}`;
+  }
+
+  async restoreState(state) {
+    try {
+      switch (state.type) {
+        case 'article-by-id':
+        case 'generate-article':
+          await this.restoreArticleById(state.articleId);
+          break;
+        case 'articles-by-language':
+          await this.restoreArticlesByLanguage(state);
+          break;
+        case 'articles-by-publisher':
+          await this.restoreArticlesByPublisher(state);
+          break;
+        case 'pull-articles':
+          await this.restorePullArticles(state);
+          break;
+        default:
+          await this.initialize();
+          break;
+      }
+    } catch (error) {
+      console.error('Error restoring state:', error);
+      this.handleError(error);
+    }
+  }
+
+  async restoreArticleById(articleId) {
+    const data = await this.getArticle(articleId);
+    this.displaySingleArticle(data, `${data.id}: ${data.title}`);
+  }
+
+  async restoreArticlesByLanguage(state) {
+    const data = await this.fetchArticles({
+      languageCode: state.languageCode,
+      limit: state.limit
+    });
+
+    if (data.length === 0) {
+      this.displayEmpty({ languageName: state.languageName });
+    } else {
+      this.displayArticles(data, state.headerText);
+    }
+  }
+
+  async restoreArticlesByPublisher(state) {
+    const data = await this.fetchArticles({
+      newsPublisherId: state.newsPublisherId,
+      limit: state.limit
+    });
+
+    if (data.length === 0) {
+      this.displayEmpty({ newsPublisherName: state.newsPublisherName });
+    } else {
+      this.displayArticles(data, state.headerText);
+    }
+  }
+
+  async restorePullArticles(state) {
+    const data = await this.pullLatestArticlesForPublisher(state.newsPublisherId, state.limit);
+    this.displayArticles(data, state.headerText);
+  }
+
+  // Check URL on load and restore state
+  async initializeFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const view = params.get('view');
+
+    if (!view) {
+      return false; // No specific view, use default initialization
+    }
+
+    try {
+      switch (view) {
+        case 'article':
+          const articleId = params.get('id');
+          if (articleId) {
+            await this.restoreArticleById(parseInt(articleId));
+            return true;
+          }
+          break;
+        case 'language':
+          const langCode = params.get('lang');
+          const langLimit = params.get('limit') || '10';
+          if (langCode) {
+            await this.fetchArticlesByLanguageFromUrl(langCode, langLimit);
+            return true;
+          }
+          break;
+        case 'publisher':
+          const publisherId = params.get('publisher');
+          const publisherLimit = params.get('limit') || '10';
+          if (publisherId) {
+            await this.fetchArticlesByPublisherFromUrl(publisherId, publisherLimit);
+            return true;
+          }
+          break;
+        case 'pull':
+          const pullPublisherId = params.get('publisher');
+          const pullLimit = params.get('limit') || '30';
+          if (pullPublisherId) {
+            await this.pullArticlesFromUrl(pullPublisherId, pullLimit);
+            return true;
+          }
+          break;
+      }
+    } catch (error) {
+      console.error('Error initializing from URL:', error);
+    }
+
+    return false;
   }
 
   // Configuration
@@ -78,7 +263,7 @@ class Articles {
     });
   }
 
-  // Event Handlers
+  // Event Handlers with History Updates
   async handleGenerateArticle(e) {
     e.preventDefault();
 
@@ -88,6 +273,14 @@ class Articles {
     try {
       this.setLoading(this.elements.generateArticleBtn, this.elements.generateLoadingBtn, true);
       const data = await this.generateArticle(articleData);
+
+      // Update history
+      this.updateHistory('generate-article', {
+        type: 'generate-article',
+        articleId: data.id,
+        articleTitle: data.title
+      }, `Generated: ${data.title}`);
+
       this.displaySingleArticle(data, `${data.id}: ${data.title}`);
     } catch (error) {
       this.handleError(error);
@@ -107,6 +300,14 @@ class Articles {
 
     try {
       const data = await this.getArticle(id);
+
+      // Update history
+      this.updateHistory('fetch-article-by-id', {
+        type: 'article-by-id',
+        articleId: parseInt(id),
+        articleTitle: data.title
+      }, `Article: ${data.title}`);
+
       this.displaySingleArticle(data, `${data.id}: ${data.title}`);
     } catch (error) {
       if (error.status === 404) {
@@ -121,6 +322,16 @@ class Articles {
     e.preventDefault();
 
     const params = this.fetchArticlesByLanguageParams();
+
+    // Update history
+    this.updateHistory('fetch-articles-by-language', {
+      type: 'articles-by-language',
+      languageCode: params.languageCode,
+      languageName: params.languageName,
+      limit: params.limit,
+      headerText: params.headerTextContent
+    }, `Articles in ${params.languageName}`);
+
     await this.fetchAndDisplayArticles(params);
   }
 
@@ -128,22 +339,42 @@ class Articles {
     e.preventDefault();
 
     const params = this.fetchArticlesByPublisherParams();
+
+    // Update history
+    this.updateHistory('fetch-articles-by-publisher', {
+      type: 'articles-by-publisher',
+      newsPublisherId: params.newsPublisherId,
+      newsPublisherName: params.newsPublisherName,
+      limit: params.limit,
+      headerText: params.headerTextContent
+    }, `Articles by ${params.newsPublisherName}`);
+
     await this.fetchAndDisplayArticles(params);
   }
 
   async pullArticlesForPublisher(e) {
     e.preventDefault();
 
-    const { newsPublisherId, limit, headerTextContent } = this.pullArticlesForPublisherParams();
+    const { newsPublisherId, limit, headerTextContent, newsPublisherName } = this.pullArticlesForPublisherParams();
 
     try {
-      this.setLoading(this.elements.pullArticlesForPublisherBtn, this.elements.pullLoadingBtn, true)
+      this.setLoading(this.elements.pullArticlesForPublisherBtn, this.elements.pullLoadingBtn, true);
+
+      // Update history
+      this.updateHistory('pull-articles-for-publisher', {
+        type: 'pull-articles',
+        newsPublisherId,
+        newsPublisherName,
+        limit,
+        headerText: headerTextContent
+      }, `Pulled: ${newsPublisherName}`);
+
       const data = await this.pullLatestArticlesForPublisher(newsPublisherId, limit);
       this.displayArticles(data, headerTextContent);
     } catch (error) {
       this.handleError(error);
     } finally {
-      this.setLoading(this.elements.pullArticlesForPublisherBtn, this.elements.pullLoadingBtn, false)
+      this.setLoading(this.elements.pullArticlesForPublisherBtn, this.elements.pullLoadingBtn, false);
     }
   }
 
@@ -156,12 +387,51 @@ class Articles {
     try {
       this.setLoading(btn, regenerateLoadingBtn, true);
       const data = await this.regenerateArticle(id);
+
+      // Update history
+      this.updateHistory('regenerate-article', {
+        type: 'generate-article',
+        articleId: data.id,
+        articleTitle: data.title
+      }, `Regenerated: ${data.title}`);
+
       this.displaySingleArticle(data, `${data.id}: ${data.title}`);
     } catch (error) {
       this.handleError(error);
     } finally {
       this.setLoading(btn, regenerateLoadingBtn, false);
     }
+  }
+
+  // URL-based restore methods
+  async fetchArticlesByLanguageFromUrl(languageCode, limit) {
+    const data = await this.fetchArticles({ languageCode, limit });
+    // You'll need to get the language name from your language list or API
+    const headerText = `${limit} Most Recent Articles in Language ${languageCode}`;
+
+    if (data.length === 0) {
+      this.displayEmpty({ languageName: languageCode });
+    } else {
+      this.displayArticles(data, headerText);
+    }
+  }
+
+  async fetchArticlesByPublisherFromUrl(newsPublisherId, limit) {
+    const data = await this.fetchArticles({ newsPublisherId, limit });
+    // You'll need to get the publisher name from your publisher list or API
+    const headerText = `${limit} Most Recent Articles for Publisher ${newsPublisherId}`;
+
+    if (data.length === 0) {
+      this.displayEmpty({ newsPublisherName: newsPublisherId });
+    } else {
+      this.displayArticles(data, headerText);
+    }
+  }
+
+  async pullArticlesFromUrl(newsPublisherId, limit) {
+    const data = await this.pullLatestArticlesForPublisher(newsPublisherId, limit);
+    const headerText = `${limit} Most Recent Articles for Publisher ${newsPublisherId}`;
+    this.displayArticles(data, headerText);
   }
 
   // Data Extraction Methods
@@ -322,6 +592,24 @@ class Articles {
     link.textContent = `${article.id}: ${article.title}`
     link.classList = "hover:text-blue-800 hover:cursor-pointer"
 
+    // Add click handler for article links to update history
+    link.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        const data = await this.getArticle(article.id);
+
+        this.updateHistory('click-article-link', {
+          type: 'article-by-id',
+          articleId: article.id,
+          articleTitle: data.title
+        }, `Article: ${data.title}`);
+
+        this.displaySingleArticle(data, `${data.id}: ${data.title}`);
+      } catch (error) {
+        this.handleError(error);
+      }
+    });
+
     container.appendChild(link)
     this.elements.articlesContainer?.appendChild(container);
   }
@@ -429,11 +717,24 @@ class Articles {
   async initialize() {
     try {
       await this.populateNewsPublishers();
-      const { newsPublisherId, limit, headerTextContent } = this.pullArticlesForPublisherParams();
-      const data = await this.pullLatestArticlesForPublisher(newsPublisherId, limit);
-      this.displayArticles(data, headerTextContent);
-      // const data = await this.getArticle(336);
-      // this.displaySingleArticle(data, `${data.id}: ${data.title}`);
+
+      // Check if we should initialize from URL
+      const initializedFromUrl = await this.initializeFromUrl();
+
+      if (!initializedFromUrl) {
+        // Default initialization
+        const { newsPublisherId, limit, headerTextContent } = this.pullArticlesForPublisherParams();
+        const data = await this.pullLatestArticlesForPublisher(newsPublisherId, limit);
+        this.displayArticles(data, headerTextContent);
+
+        // Set initial history state
+        this.updateHistory('initial-load', {
+          type: 'pull-articles',
+          newsPublisherId,
+          limit,
+          headerText: headerTextContent
+        }, 'Articles');
+      }
     } catch (error) {
       this.handleError(error);
     }
