@@ -112,7 +112,7 @@ class ArticleAccordionComponent {
         const heading = document.createElement('h5');
         heading.id = headingId;
 
-        const button = this.createAccordionButton(article.title, bodyId, false, 3);
+        const button = this.createAccordionButton(article.title, bodyId, false, 2);
         heading.appendChild(button);
         accordionItem.appendChild(heading);
 
@@ -134,7 +134,7 @@ class ArticleAccordionComponent {
             article.paragraphs.forEach((para, i) => {
                 if (!para.subheader || !para.content) {
                     const error = document.createElement("p")
-                    error.textContent = `Subheader ${i + 1} or Content ${i + 1} is missing. Regenerate articles with ID: ${this.articleData.id}`
+                    error.textContent = `Subheader ${i + 1} or Content ${i + 1} is missing. Please regenerate articles.`
                     error.className = "text-red-500 mb-2 font-bold"
                     contentDiv.appendChild(error)
                     return
@@ -186,7 +186,7 @@ class ArticleAccordionComponent {
         const heading = document.createElement('h4');
         heading.id = headingId;
 
-        const button = this.createAccordionButton('Subject Articles', bodyId, false, 2);
+        const button = this.createAccordionButton('Subject Articles', bodyId, false, 1);
         heading.appendChild(button);
         accordionItem.appendChild(heading);
 
@@ -219,7 +219,7 @@ class ArticleAccordionComponent {
         const heading = document.createElement('h4');
         heading.id = headingId;
 
-        const button = this.createAccordionButton('Taboola Articles', bodyId, false, 2);
+        const button = this.createAccordionButton('Taboola Articles', bodyId, false, 1);
         heading.appendChild(button);
         accordionItem.appendChild(heading);
 
@@ -243,12 +243,12 @@ class ArticleAccordionComponent {
     getButtons(isRegenerate) {
         const mainBtn = document.createElement('button')
         mainBtn.setAttribute("data-regenerate-submit-id", this.articleData.id)
-        mainBtn.classList = "regenerate text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center m-2"
+        mainBtn.classList = "regenerate text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-1"
         mainBtn.textContent = `${isRegenerate ? "Regenerate" : "Generate"} Article`
 
         const animationBtn = document.createElement("button")
         animationBtn.setAttribute("data-regenerate-loading-id", this.articleData.id)
-        animationBtn.classList = "hidden m-2 inset-0 text-white bg-blue-900 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center cursor-not-allowed opacity-75"
+        animationBtn.classList = "hidden my-1 inset-0 text-white bg-blue-900 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center cursor-not-allowed opacity-75"
         animationBtn.innerHTML = `<svg class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">\n                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>\n                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>\n                                        </svg>\n                                        ${ isRegenerate ? "Regenerating..." : "Generating..." }`
 
         return [mainBtn, animationBtn]
@@ -317,7 +317,7 @@ class ArticleAccordionComponent {
             const generatedHeading = document.createElement('h3');
             generatedHeading.id = generatedHeadingId;
 
-            const generatedButton = this.createAccordionButton('Generated Articles', generatedBodyId, false, 1);
+            const generatedButton = this.createAccordionButton('Generated Articles', generatedBodyId, false, 0);
             generatedHeading.appendChild(generatedButton);
             generatedSection.appendChild(generatedHeading);
 

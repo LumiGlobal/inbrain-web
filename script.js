@@ -416,9 +416,11 @@ class Articles {
   async initialize() {
     try {
       await this.populateNewsPublishers();
-      const { newsPublisherId, limit, headerTextContent } = this.pullArticlesForPublisherParams();
-      const data = await this.pullLatestArticlesForPublisher(newsPublisherId, limit);
-      this.displayArticles(data, headerTextContent);
+      // const { newsPublisherId, limit, headerTextContent } = this.pullArticlesForPublisherParams();
+      // const data = await this.pullLatestArticlesForPublisher(newsPublisherId, limit);
+      // this.displayArticles(data, headerTextContent);
+      const data = await this.getArticle(336);
+      this.displaySingleArticle(data, `Article ${336}`);
     } catch (error) {
       this.handleError(error);
     }
