@@ -204,7 +204,7 @@ class Articles {
 
   pullArticlesForPublisherParams() {
     const list = this.elements.publisherPullList;
-    const limit = this.elements.publisherPullLimitInput.value || "10";
+    const limit = this.elements.publisherPullLimitInput.value || "30";
     const newsPublisherId = list.value;
     const newsPublisherName = list.options[list.selectedIndex].textContent;
 
@@ -416,8 +416,9 @@ class Articles {
   async initialize() {
     try {
       await this.populateNewsPublishers();
-      const headerTextContent = "10 Most Recent Articles in All Languages";
-      await this.fetchAndDisplayArticles({ headerTextContent });
+      const { newsPublisherId, limit, headerTextContent } = this.pullArticlesForPublisherParams();
+      const data = await this.pullLatestArticlesForPublisher(newsPublisherId, limit);
+      this.displayArticles(data, headerTextContent);
     } catch (error) {
       this.handleError(error);
     }
