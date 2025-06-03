@@ -287,6 +287,13 @@ class ArticleAccordionComponent {
         generatedSection.appendChild(mainBtn)
         generatedSection.appendChild(regenerateBtn)
 
+        if (this.articleData.last_generated_at) {
+            const lastGeneratedAt = document.createElement('p')
+            lastGeneratedAt.textContent = `Last Generated at ${this.articleData.last_generated_at}`
+            lastGeneratedAt.classList = "text-sm mt-2 ml-1 text-slate-700"
+            generatedSection.appendChild(lastGeneratedAt)
+        }
+
         mainBody.appendChild(generatedSection);
 
         mainAccordion.appendChild(mainBody);
