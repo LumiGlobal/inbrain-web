@@ -205,14 +205,14 @@ class ArticleAccordionComponent {
         return accordionItem;
     }
 
-    getButtons(isRegenerate) {
+    getButtons(isRegenerate, id = this.articleData.id) {
         const mainBtn = document.createElement('button')
-        mainBtn.setAttribute("data-regenerate-submit-id", this.articleData.id)
+        mainBtn.setAttribute("data-regenerate-submit-id", id)
         mainBtn.classList = "regenerate text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-1 hover:cursor-pointer"
         mainBtn.textContent = `${isRegenerate ? "Regenerate" : "Generate"} Articles`
 
         const animationBtn = document.createElement("button")
-        animationBtn.setAttribute("data-regenerate-loading-id", this.articleData.id)
+        animationBtn.setAttribute("data-regenerate-loading-id", id)
         animationBtn.classList = "hidden my-1 inset-0 text-white bg-blue-900 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center cursor-not-allowed opacity-75"
         animationBtn.innerHTML = `<svg class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">\n                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>\n                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>\n                                        </svg>\n                                        ${ isRegenerate ? "Regenerating..." : "Generating..." }`
 
@@ -290,7 +290,7 @@ class ArticleAccordionComponent {
         if (this.articleData.last_generated_at) {
             const lastGeneratedAt = document.createElement('p')
             lastGeneratedAt.textContent = `Last Generated at ${this.articleData.last_generated_at}`
-            lastGeneratedAt.classList = "text-sm mt-2 ml-1 text-slate-700"
+            lastGeneratedAt.classList = "text-sm mt-2 ml-1 text-slate-500"
             generatedSection.appendChild(lastGeneratedAt)
         }
 
