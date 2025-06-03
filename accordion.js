@@ -49,9 +49,10 @@ class ArticleAccordionComponent {
 
     renderPrimaryArticle() {
         const accordionItem = document.createElement('div');
-        accordionItem.className = "my-2"
+        accordionItem.className = "my-4"
 
         const body = document.createElement('div');
+        body.classList = "p-4 rounded-lg shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
 
         const contentDiv = document.createElement('div');
 
@@ -68,15 +69,17 @@ class ArticleAccordionComponent {
             contentDiv.appendChild(descElem);
         }
 
-        const contentTitle = document.createElement('p');
-        contentTitle.textContent = "Content"
-        contentTitle.className = 'font-bold mb-3';
-        contentDiv.appendChild(contentTitle);
+        if (this.articleData.content && this.articleData.content.length !== 0) {
+            const contentTitle = document.createElement('p');
+            contentTitle.textContent = "Content"
+            contentTitle.className = 'font-bold mb-3';
+            contentDiv.appendChild(contentTitle);
 
-        // Add content
-        const contentElem = document.createElement('p');
-        contentElem.textContent = this.articleData.content;
-        contentDiv.appendChild(contentElem);
+            // Add content
+            const contentElem = document.createElement('p');
+            contentElem.textContent = this.articleData.content;
+            contentDiv.appendChild(contentElem);
+        }
 
         body.appendChild(contentDiv);
         accordionItem.appendChild(body);
@@ -102,11 +105,11 @@ class ArticleAccordionComponent {
 
         const body = document.createElement('div');
         body.id = bodyId;
-        body.className = 'hidden ml-2 px-4 border-1 border-solid border-gray-600 rounded';
+        body.className = 'hidden m-2 border-1 border-solid border-gray-600 rounded';
         body.setAttribute('aria-labelledby', headingId);
 
         const contentDiv = document.createElement('div');
-        contentDiv.className = "py-2 flex flex-col gap-3"
+        contentDiv.className = "p-4 flex flex-col gap-3"
 
         // Process paragraphs
         if (article.paragraphs && article.paragraphs.length) {
@@ -122,7 +125,7 @@ class ArticleAccordionComponent {
                 const paragraphDiv = document.createElement('div')
 
                 const subheader = document.createElement('h6');
-                subheader.className = 'font-bold text-gray-800';
+                subheader.className = 'mb-2 font-bold text-gray-800';
                 subheader.textContent = para.subheader;
                 paragraphDiv.appendChild(subheader);
 
@@ -246,7 +249,7 @@ class ArticleAccordionComponent {
 
         if (this.articleData.news_publisher_name) {
             const newsPublisherDiv = document.createElement('div');
-            newsPublisherDiv.className = 'inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-700/10 ring-inset';
+            newsPublisherDiv.className = 'inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-cyan-700 ring-1 ring-cyan-700/10 ring-inset';
             newsPublisherDiv.textContent = `${this.articleData.news_publisher_name}`;
             mainBody.appendChild(newsPublisherDiv);
         }
@@ -262,33 +265,29 @@ class ArticleAccordionComponent {
         // Add primary article
         mainBody.appendChild(this.renderPrimaryArticle());
 
+        const generatedSection = document.createElement('div');
+        generatedSection.classList = "p-4 rounded-lg shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
+        const generatedBody = document.createElement('div');
+
         let isRegenerate = true
 
         if (this.articleData.generated_articles) {
-            // Create generated articles section
-            const generatedSection = document.createElement('div');
-
-            const generatedBody = document.createElement('div');
-
-            // Add subject articles section
             generatedBody.appendChild(this.renderSubjectArticles());
-
-            // Add taboola articles section
             generatedBody.appendChild(this.renderTaboolaArticles());
-
-            generatedSection.appendChild(generatedBody);
-            mainBody.appendChild(generatedSection);
         } else {
             const error = document.createElement("p")
             error.innerHTML = "No Generated Articles"
             error.classList = "mb-2 font-bold"
-            mainBody.appendChild(error)
+            generatedBody.appendChild(error)
             isRegenerate = false
         }
+        generatedSection.appendChild(generatedBody);
 
         const [mainBtn, regenerateBtn] = this.getButtons(isRegenerate)
-        mainBody.appendChild(mainBtn)
-        mainBody.appendChild(regenerateBtn)
+        generatedSection.appendChild(mainBtn)
+        generatedSection.appendChild(regenerateBtn)
+
+        mainBody.appendChild(generatedSection);
 
         mainAccordion.appendChild(mainBody);
         mainAccordion.appendChild(this.backLink())
