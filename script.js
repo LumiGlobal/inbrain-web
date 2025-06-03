@@ -585,15 +585,22 @@ class Articles {
 
   showArticleLink(article) {
     const container = document.createElement('div')
-    container.classList = "my-5"
+    container.classList = "flex flex-col gap-1 py-5 px-2 rounded-lg hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:text-blue-700 hover:cursor-pointer"
 
     const link = document.createElement('a')
     link.attributes.articleId = `${article.id}`
     link.textContent = `${article.id}: ${article.title}`
-    link.classList = "hover:text-blue-800 hover:cursor-pointer"
+    container.appendChild(link)
+
+    if (article.last_generated_at) {
+      const lastGeneratedAt = document.createElement('p')
+      lastGeneratedAt.classList = "text-sm text-slate-500"
+      lastGeneratedAt.textContent = `Last Generated at ${article.last_generated_at}`
+      container.appendChild(lastGeneratedAt)
+    }
 
     // Add click handler for article links to update history
-    link.addEventListener('click', async (e) => {
+    container.addEventListener('click', async (e) => {
       e.preventDefault();
       try {
         const data = await this.getArticle(article.id);
@@ -610,7 +617,6 @@ class Articles {
       }
     });
 
-    container.appendChild(link)
     this.elements.articlesContainer?.appendChild(container);
   }
 
