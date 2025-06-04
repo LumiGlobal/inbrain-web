@@ -81,6 +81,14 @@ class ArticleAccordionComponent {
             contentDiv.appendChild(contentElem);
         }
 
+        if (this.articleData.parent_id) {
+            const inbrainedTag = document.createElement('div');
+            inbrainedTag.setAttribute("data-parent-id", this.articleData.parent_id)
+            inbrainedTag.classList = "mt-4 font-bold text-blue-800 hover:text-blue-700 hover:cursor-pointer parent-link"
+            inbrainedTag.textContent = "To Parent Article"
+            contentDiv.appendChild(inbrainedTag)
+        }
+
         body.appendChild(contentDiv);
         accordionItem.appendChild(body);
 
@@ -116,7 +124,7 @@ class ArticleAccordionComponent {
             article.paragraphs.forEach((para, i) => {
                 if (!para.subheader || !para.content) {
                     const error = document.createElement("p")
-                    error.textContent = `Subheader ${i + 1} or Content ${i + 1} is missing. Please regenerate articles.`
+                    // error.textContent = `Subheader ${i + 1} or Content ${i + 1} is missing. Please regenerate articles.`
                     error.className = "text-red-500 font-bold"
                     contentDiv.appendChild(error)
                     return
@@ -277,6 +285,13 @@ class ArticleAccordionComponent {
             categoryDiv.className = 'ml-2 inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset';
             categoryDiv.textContent = `${this.articleData.generated_articles.main_category}`;
             mainBody.appendChild(categoryDiv);
+        }
+
+        if (this.articleData.parent_id) {
+            const inbrainedTag = document.createElement('div');
+            inbrainedTag.className = 'ml-2 inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-700/10 ring-inset';
+            inbrainedTag.textContent = "Inbrained"
+            mainBody.appendChild(inbrainedTag)
         }
 
         // Add primary article

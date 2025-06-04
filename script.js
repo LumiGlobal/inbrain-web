@@ -265,10 +265,35 @@ class Articles {
 
   bindInbrainButtons() {
     const inbrainButtons = document.getElementsByClassName("inbrain");
-    console.log(inbrainButtons);
     [...inbrainButtons].forEach((btn) => {
       btn.onclick = (e) => this.handleInbrain(e, btn)
     });
+  }
+
+  bindParentLinks() {
+    const parentLinks = document.getElementsByClassName("parent-link");
+    [...parentLinks].forEach(link => {
+      link.onclick = (e) => this.handleParentLink(e, link)
+    })
+  }
+
+  async handleParentLink(e, link) {
+    e.preventDefault;
+
+    const id = link.dataset.parentId
+    try {
+      const data = await this.getArticle(id);
+
+      this.updateHistory('click-article-link', {
+        type: 'article-by-id',
+        articleId: id,
+        articleTitle: data.title
+      }, `Article: ${data.title}`);
+
+      this.displaySingleArticle(data, `${data.id}: ${data.title}`);
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async handleInbrain(e, btn) {
@@ -611,6 +636,7 @@ class Articles {
     this.clearAccordions();
     this.createAccordion(0, data);
     this.setArticleHeader(headerText);
+    this.bindParentLinks();
     this.bindRegenerateButtons();
     this.bindInbrainButtons();
     this.initializeFlowbite();
@@ -637,12 +663,24 @@ class Articles {
     link.textContent = `${article.id}: ${article.title}`
     container.appendChild(link)
 
+    const linkFooter =  document.createElement('div')
+    linkFooter.classList = "flex items-center gap-2"
+
     if (article.last_generated_at) {
       const lastGeneratedAt = document.createElement('p')
       lastGeneratedAt.classList = "text-sm text-slate-500"
       lastGeneratedAt.textContent = `Last Generated at ${article.last_generated_at}`
-      container.appendChild(lastGeneratedAt)
+      linkFooter.appendChild(lastGeneratedAt)
     }
+
+    if (article.parent_id) {
+      const inbrainedTag = document.createElement('div');
+      inbrainedTag.className = 'inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-700/10 ring-inset';
+      inbrainedTag.textContent = "Inbrained"
+      linkFooter.appendChild(inbrainedTag)
+    }
+
+    container.appendChild(linkFooter)
 
     // Add click handler for article links to update history
     container.addEventListener('click', async (e) => {
