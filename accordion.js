@@ -165,7 +165,7 @@ class ArticleAccordionComponent {
         body.appendChild(contentDiv);
 
         const inbrainBtn = document.createElement('button')
-        inbrainBtn.setAttribute("data-inbrain-submit-id", `${this.articleData.id}-${generatedArticleIndex}`)
+        inbrainBtn.setAttribute("data-inbrain-submit-id", `${type}-${this.articleData.id}-${generatedArticleIndex}`)
         inbrainBtn.setAttribute("data-article-id", this.articleData.id)
         inbrainBtn.setAttribute("data-article-type", type)
         inbrainBtn.setAttribute("data-generated-article-index", generatedArticleIndex)
@@ -174,7 +174,7 @@ class ArticleAccordionComponent {
         inbrainBtn.textContent = "Generate Articles"
 
         const animationBtn = document.createElement("button")
-        animationBtn.setAttribute("data-inbrain-loading-id", `${this.articleData.id}-${generatedArticleIndex}`)
+        animationBtn.setAttribute("data-inbrain-loading-id", `${type}-${this.articleData.id}-${generatedArticleIndex}`)
         animationBtn.classList = "hidden text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-1 hover:cursor-pointer mx-4 mb-3"
         animationBtn.innerHTML = `<svg class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">\n                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>\n                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>\n                                        </svg>\n                                        Generating...`
         body.appendChild(inbrainBtn)
@@ -221,8 +221,8 @@ class ArticleAccordionComponent {
         // Add each taboola article
         if (this.articleData.generated_articles.taboola_articles &&
             this.articleData.generated_articles.taboola_articles.length) {
-            this.articleData.generated_articles.taboola_articles.forEach(article => {
-                body.appendChild(this.renderArticleSection(article, 'taboola'));
+            this.articleData.generated_articles.taboola_articles.forEach((article, paragraphIndex) => {
+                body.appendChild(this.renderArticleSection(article, 'taboola', paragraphIndex));
             });
         }
 
