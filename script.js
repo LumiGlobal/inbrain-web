@@ -263,6 +263,42 @@ class Articles {
     });
   }
 
+  bindInbrainButtons() {
+    const inbrainButtons = document.getElementsByClassName("inbrain");
+    console.log(inbrainButtons);
+    [...inbrainButtons].forEach((btn) => {
+      btn.onclick = (e) => this.handleInbrain(e, btn)
+    });
+  }
+
+  async handleInbrain(e, btn) {
+    e.preventDefault();
+
+    const inbrainLoadingBtn = document.querySelector(`[data-inbrain-loading-id="${btn.dataset.inbrainSubmitId}"]`)
+
+    try {
+      this.setLoading(btn, inbrainLoadingBtn, true)
+      const params = {
+        articleId: btn.dataset.articleId,
+        articleType: btn.dataset.articleType,
+        generatedArticleIndex: btn.dataset.generatedArticleIndex
+      }
+      const data = await this.inbrainGeneratedArticle(params)
+
+      this.updateHistory('inbrain-article', {
+        type: 'generate-article',
+        articleId: data.id,
+        articleTitle: data.title
+      }, `Inbrained: ${data.title}`)
+
+      this.displaySingleArticle(data, `${data.id}: ${data.title}`)
+    } catch (error) {
+      this.handleError(error)
+    } finally {
+      this.setLoading(btn, inbrainLoadingBtn, false)
+    }
+  }
+
   // Event Handlers with History Updates
   async handleGenerateArticle(e) {
     e.preventDefault();
@@ -558,6 +594,14 @@ class Articles {
     });
   }
 
+  async inbrainGeneratedArticle({ articleId, articleType, generatedArticleIndex }) {
+    const payload = JSON.stringify({ article_id: articleId, article_type: articleType, generated_article_index: generatedArticleIndex })
+    return this.makeRequest(`${this.baseUrl}/v1/articles/inbrain`, {
+      method: "POST",
+      body: payload
+    })
+  }
+
   async getNewsPublishersList() {
     return this.makeRequest(`${this.baseUrl}/v1/news_publishers`);
   }
@@ -568,6 +612,7 @@ class Articles {
     this.createAccordion(0, data);
     this.setArticleHeader(headerText);
     this.bindRegenerateButtons();
+    this.bindInbrainButtons();
     this.initializeFlowbite();
   }
 
