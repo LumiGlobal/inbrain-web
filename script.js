@@ -263,6 +263,67 @@ class Articles {
     });
   }
 
+  bindInbrainButtons() {
+    const inbrainButtons = document.getElementsByClassName("inbrain");
+    [...inbrainButtons].forEach((btn) => {
+      btn.onclick = (e) => this.handleInbrain(e, btn)
+    });
+  }
+
+  bindParentLinks() {
+    const parentLinks = document.getElementsByClassName("parent-link");
+    [...parentLinks].forEach(link => {
+      link.onclick = (e) => this.handleParentLink(e, link)
+    })
+  }
+
+  async handleParentLink(e, link) {
+    e.preventDefault;
+
+    const id = link.dataset.parentId
+    try {
+      const data = await this.getArticle(id);
+
+      this.updateHistory('click-article-link', {
+        type: 'article-by-id',
+        articleId: id,
+        articleTitle: data.title
+      }, `Article: ${data.title}`);
+
+      this.displaySingleArticle(data, `${data.id}: ${data.title}`);
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async handleInbrain(e, btn) {
+    e.preventDefault();
+
+    const inbrainLoadingBtn = document.querySelector(`[data-inbrain-loading-id="${btn.dataset.inbrainSubmitId}"]`)
+
+    try {
+      this.setLoading(btn, inbrainLoadingBtn, true)
+      const params = {
+        articleId: btn.dataset.articleId,
+        articleType: btn.dataset.articleType,
+        generatedArticleIndex: btn.dataset.generatedArticleIndex
+      }
+      const data = await this.inbrainGeneratedArticle(params)
+
+      this.updateHistory('inbrain-article', {
+        type: 'generate-article',
+        articleId: data.id,
+        articleTitle: data.title
+      }, `Inbrained: ${data.title}`)
+
+      this.displaySingleArticle(data, `${data.id}: ${data.title}`)
+    } catch (error) {
+      this.handleError(error)
+    } finally {
+      this.setLoading(btn, inbrainLoadingBtn, false)
+    }
+  }
+
   // Event Handlers with History Updates
   async handleGenerateArticle(e) {
     e.preventDefault();
@@ -558,6 +619,14 @@ class Articles {
     });
   }
 
+  async inbrainGeneratedArticle({ articleId, articleType, generatedArticleIndex }) {
+    const payload = JSON.stringify({ article_id: articleId, article_type: articleType, generated_article_index: generatedArticleIndex })
+    return this.makeRequest(`${this.baseUrl}/v1/articles/inbrain`, {
+      method: "POST",
+      body: payload
+    })
+  }
+
   async getNewsPublishersList() {
     return this.makeRequest(`${this.baseUrl}/v1/news_publishers`);
   }
@@ -567,7 +636,9 @@ class Articles {
     this.clearAccordions();
     this.createAccordion(0, data);
     this.setArticleHeader(headerText);
+    this.bindParentLinks();
     this.bindRegenerateButtons();
+    this.bindInbrainButtons();
     this.initializeFlowbite();
   }
 
@@ -592,12 +663,24 @@ class Articles {
     link.textContent = `${article.id}: ${article.title}`
     container.appendChild(link)
 
+    const linkFooter =  document.createElement('div')
+    linkFooter.classList = "flex items-center gap-2"
+
     if (article.last_generated_at) {
       const lastGeneratedAt = document.createElement('p')
       lastGeneratedAt.classList = "text-sm text-slate-500"
       lastGeneratedAt.textContent = `Last Generated at ${article.last_generated_at}`
-      container.appendChild(lastGeneratedAt)
+      linkFooter.appendChild(lastGeneratedAt)
     }
+
+    if (article.parent_id) {
+      const inbrainedTag = document.createElement('div');
+      inbrainedTag.className = 'inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-700/10 ring-inset';
+      inbrainedTag.textContent = "Inbrained"
+      linkFooter.appendChild(inbrainedTag)
+    }
+
+    container.appendChild(linkFooter)
 
     // Add click handler for article links to update history
     container.addEventListener('click', async (e) => {

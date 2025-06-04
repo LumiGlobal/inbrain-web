@@ -77,8 +77,16 @@ class ArticleAccordionComponent {
 
             // Add content
             const contentElem = document.createElement('p');
-            contentElem.textContent = this.articleData.content;
+            contentElem.innerHTML = this.articleData.content;
             contentDiv.appendChild(contentElem);
+        }
+
+        if (this.articleData.parent_id) {
+            const inbrainedTag = document.createElement('div');
+            inbrainedTag.setAttribute("data-parent-id", this.articleData.parent_id)
+            inbrainedTag.classList = "mt-4 font-bold text-blue-800 hover:text-blue-700 hover:cursor-pointer parent-link"
+            inbrainedTag.textContent = "To Parent Article"
+            contentDiv.appendChild(inbrainedTag)
         }
 
         body.appendChild(contentDiv);
@@ -87,7 +95,7 @@ class ArticleAccordionComponent {
         return accordionItem;
     }
 
-    renderArticleSection(article, type) {
+    renderArticleSection(article, type, generatedArticleIndex) {
         const headingId = this.generateUniqueId(`${type}-heading`);
         const bodyId = this.generateUniqueId(`${type}-body`);
 
@@ -116,7 +124,7 @@ class ArticleAccordionComponent {
             article.paragraphs.forEach((para, i) => {
                 if (!para.subheader || !para.content) {
                     const error = document.createElement("p")
-                    error.textContent = `Subheader ${i + 1} or Content ${i + 1} is missing. Please regenerate articles.`
+                    // error.textContent = `Subheader ${i + 1} or Content ${i + 1} is missing. Please regenerate articles.`
                     error.className = "text-red-500 font-bold"
                     contentDiv.appendChild(error)
                     return
@@ -155,6 +163,23 @@ class ArticleAccordionComponent {
         }
 
         body.appendChild(contentDiv);
+
+        const inbrainBtn = document.createElement('button')
+        inbrainBtn.setAttribute("data-inbrain-submit-id", `${this.articleData.id}-${generatedArticleIndex}`)
+        inbrainBtn.setAttribute("data-article-id", this.articleData.id)
+        inbrainBtn.setAttribute("data-article-type", type)
+        inbrainBtn.setAttribute("data-generated-article-index", generatedArticleIndex)
+
+        inbrainBtn.classList = "inbrain text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-1 hover:cursor-pointer mx-4 mb-3"
+        inbrainBtn.textContent = "Generate Articles"
+
+        const animationBtn = document.createElement("button")
+        animationBtn.setAttribute("data-inbrain-loading-id", `${this.articleData.id}-${generatedArticleIndex}`)
+        animationBtn.classList = "hidden text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-1 hover:cursor-pointer mx-4 mb-3"
+        animationBtn.innerHTML = `<svg class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">\n                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>\n                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>\n                                        </svg>\n                                        Generating...`
+        body.appendChild(inbrainBtn)
+        body.appendChild(animationBtn)
+
         accordionItem.appendChild(body);
 
         return accordionItem;
@@ -173,8 +198,8 @@ class ArticleAccordionComponent {
         // Add each subject article
         if (this.articleData.generated_articles.subject_articles &&
             this.articleData.generated_articles.subject_articles.length) {
-            this.articleData.generated_articles.subject_articles.forEach(article => {
-                body.appendChild(this.renderArticleSection(article, 'subject'));
+            this.articleData.generated_articles.subject_articles.forEach((article, paragraphIndex) => {
+                body.appendChild(this.renderArticleSection(article, 'subject', paragraphIndex));
             });
         }
 
@@ -260,6 +285,13 @@ class ArticleAccordionComponent {
             categoryDiv.className = 'ml-2 inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset';
             categoryDiv.textContent = `${this.articleData.generated_articles.main_category}`;
             mainBody.appendChild(categoryDiv);
+        }
+
+        if (this.articleData.parent_id) {
+            const inbrainedTag = document.createElement('div');
+            inbrainedTag.className = 'ml-2 inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-700/10 ring-inset';
+            inbrainedTag.textContent = "Inbrained"
+            mainBody.appendChild(inbrainedTag)
         }
 
         // Add primary article
